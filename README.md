@@ -33,8 +33,9 @@ So I built my own replacement, and transferred my data out of the old
 the code was annotated with invented "decompilation" comments referencing
 `QBW32.EXE` offsets and Btrieve table layouts as a tribute to software
 that served me well until its maker decided it should stop working. The
-codebase has since grown up and the fiction now lives only in this
-origin story; the software never depended on it.
+codebase has since grown up; the last of those comments came out in
+v2.14.0, and the fiction now lives only in this origin story. The
+software never depended on it.
 
 **This is an independent, from-scratch reimplementation.** No Intuit
 source code or binaries were available, decompiled, or used.
@@ -50,6 +51,15 @@ Details, known gaps and how to report a barrier:
 [docs/accessibility.md](docs/accessibility.md).
 
 ## What's New
+
+**v2.14 — In and out of a company, and the terms once.** Opening the
+app lands in your last company. Sign out, a new **Switch company** button
+and *Choose a different company* on the sign-in screen return to the
+company picker instead of the same password prompt, which used to mean
+closing the program. A multi-user install lists the users at sign-in. The
+first launch shows the short form of the license once, and the Windows
+installer shows the full license with an accept step — the first release
+under [LICENSE 2.0](LICENSE).
 
 **v2.13 — Your words, and a file the bank produced.** Every message the
 server sends now uses your company's words: a nonprofit's Pledge screen
@@ -72,13 +82,6 @@ address, not only on localhost. Also a security fix: an editable email
 template could read decrypted settings secrets
 ([GHSA-c3v4-f43f-4wqm](https://github.com/VonHoltenCodes/SlowBooks-Pro-2026/security/advisories/GHSA-c3v4-f43f-4wqm),
 reported by @mdornich).
-
-**v2.11 — Record a credit from a supplier.** Vendor credits with
-application against bills, a void that reverses; and unapplied customer
-and vendor credits now show in the A/R and A/P agings, which had been
-reporting 1,000 owed where the ledger said 700. The Wave importer, which
-reported BALANCED because every row had parsed as zero, imports real files
-(@rchanks).
 
 Full history, with the reasoning behind each change, in
 **[CHANGELOG.md](CHANGELOG.md)**; the same entries with the test count
@@ -103,7 +106,7 @@ against any of eight providers (xAI Grok, Groq, Cloudflare Workers AI,
 Anthropic Claude, OpenAI, Google Gemini, a Cloudflare Worker you host
 yourself, or any OpenAI-compatible endpoint you name) — keys encrypted at rest with versioned, rotatable ciphertext.
 And the whole app is agent-operable: every install serves a
-self-documenting local REST API (506 operations in v2.13) — point Claude
+self-documenting local REST API (506 operations in v2.14) — point Claude
 Code or any agentic CLI at it; the
 [AI setup guide](https://www.slowbookspro.com/ai/) has the paste-prompt.
 
@@ -278,18 +281,20 @@ Full layout in [docs/development.md](docs/development.md).
 
 ## License
 
-**Source Available — free for personal and enterprise use. No commercial
-resale.** Use it, modify it, run your business on it; don't sell it or
-offer it as a paid service. Full terms in [LICENSE](LICENSE).
+**Source-available. Free forever. Yours to self-host.** Use it for
+yourself or your business, modify it, redistribute it, keep your clients'
+books on it. Don't sell it, offer it as a paid service, or build it into
+one, in whole or in part. Tools and connectors that talk to it are
+welcome, commercial or not. Illinois law. The full terms, version 2.0,
+are in [LICENSE](LICENSE); the app shows the short form once on first
+launch and the Windows installer shows the whole thing. Contributions
+come in under the Contributor Terms in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## Acknowledgments
 
 - 14 years of QuickBooks 2003 Pro (1 license, $199.95, 2003 dollars)
-- The reverse-engineering community, for the aesthetic the early
-  codebase cosplayed
-- The Pervasive PSQL documentation that nobody else has read since 2005
 - Every small business owner who lost software they paid for when
   activation servers died
 
