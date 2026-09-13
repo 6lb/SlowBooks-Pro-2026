@@ -1,10 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 # ============================================================================
-# Decompiled from qbw32.exe!CBackupManager::DoBackup()  Offset: 0x00248000
-# Original backed up the .QBW file (Btrieve database) to a user-specified
-# location. It also created a .QBB file which was just a renamed ZIP.
-# We use pg_dump because PostgreSQL > Pervasive PSQL in every measurable way.
+# Server Edition backup: pg_dump the company database to a dated file.
 # ============================================================================
 
 BACKUP_DIR="${BACKUP_DIR:-$HOME/bookkeeper-backups}"
