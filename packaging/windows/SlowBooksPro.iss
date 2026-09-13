@@ -26,6 +26,8 @@ SolidCompression=yes
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 WizardStyle=modern
+; LICENSE section 13: the installer shows the license and requires acceptance.
+LicenseFile=..\..\LICENSE
 DisableProgramGroupPage=yes
 ; Ask running instances to close before upgrading. The uvicorn server child
 ; (--_serve) has no window, so [Code] below also stops it by name.
@@ -43,6 +45,8 @@ Type: filesandordirs; Name: "{app}\_internal"
 
 [Files]
 Source: "dist\SlowBooksPro\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+; The license the wizard showed, kept beside the program.
+Source: "..\..\LICENSE"; DestDir: "{app}"; DestName: "LICENSE.txt"
 ; Microsoft's Evergreen WebView2 bootstrapper (~2 MB), downloaded by CI.
 ; Only executed when the runtime is missing (see [Run] Check) — Windows 11
 ; and most Windows 10 machines already have it.

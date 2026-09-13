@@ -7,6 +7,16 @@ on what the software does, not on what sprint shipped what.
 
 ## [Unreleased]
 
+**The first launch shows the terms.** The splash that already opens on
+every launch shows the short form of the license once per install — free
+forever for what shipped, the forms are aids and the filer is responsible,
+no warranty and no obligation to maintain, Illinois law — and the button
+reads *I understand* until it has been pressed for that license version.
+After that it is the splash it always was. The Windows installer shows the
+full license with an accept step and leaves a copy beside the program. The
+license itself moved to version 2.0 at the same time; every earlier release
+keeps the license it shipped with.
+
 ### v2.13.1 — The words the server sends
 
 **Every sentence the server sends now follows the company type.** The

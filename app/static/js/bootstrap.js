@@ -13,10 +13,30 @@
 (function () {
     'use strict';
 
-    // --- Splash dismiss ----------------------------------------------------
+    // --- Splash: the terms, once per license version, then OK ----------------
+    // LICENSE section 13: the desktop app displays the short terms before
+    // first use and records that they were shown. A file on GitHub is not
+    // a contract with someone who only ever double-clicked the installer.
+    // Recorded per browser profile — the desktop app's WebView profile is
+    // persistent, so once per install; Server Edition users see it once
+    // per browser. Not a gate on every launch: once is the point.
+    const LICENSE_VERSION = '2.0';
+    const ACK_KEY = 'slowbooks.license_ack';
     const dismiss = document.getElementById('splash-dismiss');
+    const terms = document.getElementById('splash-terms');
+    let acknowledged = false;
+    try { acknowledged = localStorage.getItem(ACK_KEY) === LICENSE_VERSION; } catch (e) { /* no storage: show it */ }
+    if (terms && !acknowledged) {
+        terms.hidden = false;
+        const v = document.getElementById('splash-license-version');
+        if (v) v.textContent = LICENSE_VERSION;
+        if (dismiss) dismiss.textContent = 'I understand';
+    }
     if (dismiss) {
         dismiss.addEventListener('click', () => {
+            if (terms && !acknowledged) {
+                try { localStorage.setItem(ACK_KEY, LICENSE_VERSION); } catch (e) { /* shown again next time; acceptable */ }
+            }
             document.getElementById('splash').classList.add('hidden');
         });
     }

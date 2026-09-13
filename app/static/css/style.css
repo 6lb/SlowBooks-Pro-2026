@@ -1116,6 +1116,22 @@ tr.clickable { cursor: pointer; }
 .splash-whatsnew ul { margin: 0; padding-left: 16px; }
 .splash-whatsnew li { margin: 2px 0; }
 
+.splash-terms {
+    text-align: left;
+    margin: 12px 0 4px;
+    padding: 10px 14px;
+    border: 1px solid var(--gray-300, #d0d4dc);
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.45;
+    max-height: 260px;
+    overflow-y: auto;
+}
+.splash-terms-title { font-weight: 700; margin-bottom: 6px; }
+.splash-terms-list { margin: 0; padding-left: 18px; }
+.splash-terms-list li { margin-bottom: 6px; }
+.splash-terms a { color: var(--text-link, #1a56db); }
+
 .splash-legal {
     font-size: 8px;
     color: rgba(255,255,255,0.25);
