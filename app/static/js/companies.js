@@ -2,10 +2,11 @@
  * Multi-Company — list and create company files/databases
  * Feature 16: Company management UI
  *
- * Switching companies is NOT done live from this page. On desktop installs
- * each company is its own database file (like a QuickBooks company file):
- * close SlowBooks Pro and reopen it, and the launcher asks which company
- * to open. On server (PostgreSQL) installs each company is a separate
+ * On desktop installs each company is its own database file (like a
+ * QuickBooks company file). "Switch company…" signs this company out and
+ * asks the launcher for its picker (pywebview.api.show_picker); the page
+ * cannot switch a browser session, so the button only appears under the
+ * desktop shell. On server (PostgreSQL) installs each company is a separate
  * database configured at deploy time.
  */
 const CompaniesPage = {

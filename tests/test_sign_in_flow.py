@@ -145,5 +145,8 @@ def test_the_picker_opens_the_last_company_on_first_load_only(monkeypatch):
     api.show_picker()
     assert api.list_companies()["auto_open"] is False
     # and the page honours it: opens only when auto_open is set and the file is listed
-    assert "info.auto_open && info.last_opened" in dl.PICKER_HTML
-    assert "openCompany(info.last_opened)" in dl.PICKER_HTML
+    assert "c.file === info.last_opened" in dl.PICKER_HTML
+    assert "if (info.auto_open && last)" in dl.PICKER_HTML
+    assert "openCompany(last.file, last.name)" in dl.PICKER_HTML
+    # and says which company it is opening while the list is greyed out
+    assert "setStatus('Opening ' + (name || 'company')" in dl.PICKER_HTML

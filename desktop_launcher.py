@@ -571,19 +571,21 @@ async function refresh() {
       '<div class="open">Open &rsaquo;</div></div>';
   }).join('');
   list.querySelectorAll('.company').forEach(function (el) {
-    el.onclick = function () { openCompany(el.getAttribute('data-file')); };
+    el.onclick = function () { openCompany(el.getAttribute('data-file'), el.querySelector('.name').firstChild.textContent); };
   });
   // First launch of the window: straight into the last company. The
   // sign-in screen it lands on offers "Choose a different company", and
   // Sign out comes back here with auto_open off.
-  if (info.auto_open && info.last_opened &&
-      info.companies.some(function (c) { return c.file === info.last_opened; })) {
-    openCompany(info.last_opened);
+  const last = info.companies.find(function (c) { return c.file === info.last_opened; });
+  if (info.auto_open && last) {
+    openCompany(last.file, last.name);
   }
 }
-async function openCompany(file) {
+async function openCompany(file, name) {
   setBusy(true);
-  setStatus('Opening company… first open can take a minute.');
+  // Name the company: the list greys out while this runs, and a greyed list
+  // with a generic line read as "all companies unavailable" (2.14.0 gate).
+  setStatus('Opening ' + (name || 'company') + '… first open can take a minute.');
   const result = await window.pywebview.api.open_company(file);
   if (result && result.success) {
     // Navigate from JS, only AFTER the call above has resolved -- doing

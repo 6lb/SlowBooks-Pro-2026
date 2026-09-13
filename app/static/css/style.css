@@ -1126,6 +1126,9 @@ tr.clickable { cursor: pointer; }
     line-height: 1.45;
     max-height: 260px;
     overflow-y: auto;
+    /* the sibling .splash-whatsnew's panel; without it the text sits at 1.16:1 on the
+       splash navy (macbase1, 2.14.0 gate) */
+    background: rgba(255, 255, 255, 0.55);
 }
 .splash-terms-title { font-weight: 700; margin-bottom: 6px; }
 .splash-terms-list { margin: 0; padding-left: 18px; }
