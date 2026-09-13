@@ -308,7 +308,7 @@ Canonical list of security measures lives in [SECURITY.md](../SECURITY.md); engi
 
 ## UI
 - Authentic QB2003 "Default Blue" skin with navy/gold color palette (+ dark mode)
-- Splash screen with build info and decompilation provenance
+- Splash screen with build info, what's new, and the license notice
 - Windows XP-era toolbar, sidebar navigator with icons, status bar
 - Keyboard shortcuts: `Alt+N` (new invoice), `Alt+P` (payment), `Alt+Q` (quick entry), `Alt+H` (home), `Alt+D` (dark mode), `Ctrl+S` (save modal form), `Ctrl+K` (search), `Escape` (close modal)
 - No frameworks — vanilla HTML/CSS/JS single-page app

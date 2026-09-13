@@ -1,39 +1,211 @@
-Slowbooks Pro 2026 — Source Available License
+SlowBooks Pro 2026 — Source Available License, version 2.0
+(applies to every release of the Software published on or after the date
+this version of the license first appears in the repository; releases
+published earlier keep the license they shipped with)
 
 Copyright (c) 2026 Trent Von Holten
 
-Permission is hereby granted, free of charge, to any person or organization
-obtaining a copy of this software and associated documentation files (the
-"Software"), to use, copy, modify, merge, and distribute the Software for
-personal, educational, internal business, or enterprise purposes, subject to
-the following conditions:
 
-1. PERMITTED USE: The Software may be freely used for any personal,
-   non-commercial, educational, or internal enterprise/business purpose.
-   You may modify the Software and run it on your own systems without
-   restriction.
+0. THE SHORT VERSION
 
-2. NO COMMERCIAL RESALE: The Software, or any derivative work based
-   substantially on the Software, may NOT be sold, sublicensed, or
-   commercially distributed as a paid product or service. This includes
-   but is not limited to: selling copies, offering the Software as a
-   hosted SaaS product for profit, or bundling it into a commercial
-   product for sale.
+   Free for you to use, forever, for personal use and for running your own
+   business or organization, including a for-profit one. You may read,
+   modify, and redistribute it. You may not sell it, rent it, or offer the
+   Software itself as a paid service. Tools that connect to it are welcome,
+   commercial or not. The forms and figures it produces are aids, not
+   advice, and filing them is your responsibility. There is no warranty.
+   The full terms below control.
 
-3. REDISTRIBUTION: You may freely redistribute the Software in source
-   or binary form, provided this license and copyright notice are
-   included in all copies or substantial portions of the Software, and
-   the redistribution is not for commercial sale (see #2).
 
-4. ATTRIBUTION: Redistributions must retain the above copyright notice,
-   this license, and the following acknowledgment:
+1. DEFINITIONS
 
-   "Slowbooks Pro 2026 — originally created by Trent Von Holten"
+   "Software" means SlowBooks Pro 2026 in source or binary form, the
+   associated documentation, and any Derivative Work.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+   "Derivative Work" means a work that copies, modifies, or incorporates
+   any part of the Software's source code, templates, or assets, in whole
+   or in part. A program that only interoperates with the Software
+   through its HTTP API, its import and export formats, or its
+   company-file format, without incorporating its code, is NOT a
+   Derivative Work.
+
+   "Licensor" means the copyright holder named above.
+
+   "You" means the person or organization exercising rights under this
+   license.
+
+
+2. PERMISSIONS
+
+   Subject to the conditions below, the Licensor grants You a perpetual,
+   worldwide, royalty-free, non-exclusive license to use, copy, modify,
+   merge, and redistribute the Software for any purpose, including:
+
+   (a) personal use;
+   (b) internal use by a business, nonprofit, or other organization of any
+       size, including a for-profit one, including keeping the books of
+       that organization and of its own clients or members;
+   (c) educational use and research;
+   (d) building, selling, and supporting separate programs that
+       interoperate with the Software as described in Section 1.
+
+   The license for any given release is perpetual and irrevocable for
+   that release: a version You have lawfully obtained stays licensed to
+   You on these terms even if later versions change license or stop being
+   published.
+
+
+3. RESTRICTIONS
+
+   You may NOT:
+
+   (a) sell, rent, lease, or sublicense the Software or a Derivative Work,
+       in whole or in part, or charge a fee for a copy of it;
+   (b) offer the Software or a Derivative Work to third parties as a
+       hosted, managed, or online service, whether paid directly or
+       through a subscription, support fee, bundle, or advertising —
+       "offering the Software as a service" means giving people outside
+       your own organization access to the Software's user interface or
+       API as the thing they are paying for. Using the Software to keep
+       books for your own clients is internal use and is permitted under
+       Section 2(b); selling those clients access to the Software itself
+       is not;
+   (c) include the Software or a Derivative Work, in whole or in part, in
+       a product that is sold or in a service offered to third parties —
+       including as a feature, module, or component of a larger paid
+       product or hosted service — except as permitted by Section 2(d);
+   (d) remove or alter the copyright notice, this license, or the
+       attribution in Section 4;
+   (e) use the Licensor's name, or the names "SlowBooks" and "SlowBooks
+       Pro", to endorse or promote a Derivative Work, or ship a Derivative
+       Work under those names. Forks must be renamed. Truthful statements
+       that a program is derived from, or connects to, SlowBooks Pro are
+       permitted.
+
+   These restrictions bind licensees. They do not restrict the Licensor,
+   who may license, sell, host, or support the Software on any terms.
+
+
+4. REDISTRIBUTION AND ATTRIBUTION
+
+   You may redistribute the Software and Derivative Works in source or
+   binary form, provided that:
+
+   (a) the redistribution is not for a fee and not as part of a paid
+       product or service (Section 3);
+   (b) this license and the copyright notice are included with every
+       copy; and
+   (c) the following acknowledgment is retained in the documentation or
+       an About screen:
+
+       "SlowBooks Pro 2026 — originally created by Trent Von Holten"
+
+
+5. CONTRIBUTIONS
+
+   Unless You state otherwise in writing when You submit it, any
+   contribution You intentionally submit for inclusion in the Software is
+   made under the Contributor Terms in CONTRIBUTING.md, which grant the
+   Licensor a perpetual, irrevocable license to the contribution,
+   including the right to relicense it, and confirm that You have the
+   right to make that grant. You keep your copyright.
+
+
+6. NO PROFESSIONAL ADVICE; TAX, PAYROLL, AND FILINGS
+
+   The Software prepares accounting records, payroll calculations, tax
+   forms (including W-2, W-3, 940, 941, state withholding, sales tax
+   reports, and Schedule C), and payment files such as NACHA batches.
+   These are AIDS TO YOUR OWN WORK, NOT ADVICE. The Software does not
+   file anything with any tax authority, bank, or government.
+
+   You are solely responsible for reviewing every figure and every form
+   before You rely on it, file it, or pay from it. Tax law, withholding
+   tables, rates, thresholds, and form layouts change; the Software's
+   tables carry the year they were compiled and may be out of date. The
+   Licensor makes no representation that any figure or form matches
+   current federal, state, or local law. The Software is not a substitute
+   for a licensed accountant, enrolled agent, attorney, or tax-authority-
+   certified filing software.
+
+
+7. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, ACCURACY,
+   AND NONINFRINGEMENT. Statements on the project's website, in its
+   documentation, or in its release notes describe what the Software is
+   designed to do; they are not warranties. The Licensor has no obligation
+   to provide updates, support, fixes, or continued availability of any
+   version. "Free forever" describes the price of what has been released,
+   not a promise of maintenance.
+
+
+8. LIMITATION OF LIABILITY
+
+   TO THE FULLEST EXTENT PERMITTED BY LAW, IN NO EVENT SHALL THE LICENSOR
+   OR ANY CONTRIBUTOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY
+   ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR ITS USE,
+   INCLUDING WITHOUT LIMITATION ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES; LOSS OF DATA, PROFITS,
+   REVENUE, OR GOODWILL; TAX PENALTIES, INTEREST, OR ASSESSMENTS; PAYROLL
+   ERRORS; OR THE COST OF SUBSTITUTE SERVICES — WHETHER IN CONTRACT, TORT
+   (INCLUDING NEGLIGENCE), OR OTHERWISE, AND EVEN IF ADVISED OF THE
+   POSSIBILITY OF SUCH DAMAGES. The Licensor's total liability for all
+   claims relating to the Software shall not exceed the amount You paid
+   the Licensor for it, which is zero.
+
+   Some jurisdictions do not permit the exclusion of liability for gross
+   negligence, willful misconduct, or certain implied warranties; to that
+   extent only, the exclusions above do not apply, and the remainder of
+   this Section stays in force.
+
+
+9. INDEMNITY
+
+   You agree to defend, indemnify, and hold harmless the Licensor and the
+   contributors from and against any claim, loss, liability, penalty, or
+   expense (including reasonable attorney's fees) arising from Your use of
+   the Software, including: books You keep, payroll You run, forms and
+   files You submit, payments You make, data You lose, Your redistribution
+   or modification of the Software, and any service You give third
+   parties with it.
+
+
+10. THIRD-PARTY SERVICES AND DATA
+
+   Payment processors, bank-feed providers, AI providers, and other
+   services You connect to the Software are governed by their own terms;
+   the credentials are Yours and the relationship is Yours. You are
+   responsible for backing up your company files, for securing any
+   machine or network You serve the Software from, and for who can reach
+   it there.
+
+
+11. TERMINATION
+
+   This license terminates automatically if You breach Section 3 or 4.
+   On termination You must stop distributing the Software and any
+   Derivative Work and stop offering it as a service; You may keep using
+   copies You already have for internal purposes. Sections 6 through 12
+   survive termination. The Licensor may seek injunctive relief for a
+   breach of Section 3 in addition to any other remedy.
+
+
+12. GOVERNING LAW AND VENUE
+
+   This license is governed by the laws of the State of Illinois, without
+   regard to its conflict-of-laws rules. Any dispute arising from it or
+   from the Software shall be brought exclusively in the state or federal
+   courts sitting in Will County, Illinois, and You consent to their
+   jurisdiction and venue. If any provision is held unenforceable, the
+   rest remains in effect.
+
+
+13. ACCEPTANCE
+
+   Using, copying, modifying, or redistributing the Software is acceptance
+   of this license. The desktop application and the Windows installer
+   display Sections 0, 6, 7, 8, and 9 before first use and record that
+   they were shown.

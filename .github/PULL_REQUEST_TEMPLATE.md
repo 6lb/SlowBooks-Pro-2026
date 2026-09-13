@@ -26,6 +26,14 @@ something for each that does. Bullet points are fine; this isn't an essay.
 - [ ] Manually verified the user flow described above
 - [ ] Tested in dark mode (UI changes only)
 
+## Contributor terms
+
+- [ ] I have read the **Contributor Terms** in CONTRIBUTING.md: I keep my
+      copyright, I grant the project an irrevocable license to this work
+      including the right to relicense it, and I have the right to
+      contribute it (including from my employer, if applicable). My
+      commits carry `Signed-off-by`.
+
 ## Screenshots / output
 
 <!-- For UI changes, a before/after screenshot. For PDFs or reports,

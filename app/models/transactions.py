@@ -70,8 +70,8 @@ class TransactionLine(Base):
         nullable=False,
         index=True,
     )
-    debit = Column(Numeric(12, 2), default=0, nullable=False)  # BCD[6] at offset 0x0C
-    credit = Column(Numeric(12, 2), default=0, nullable=False)  # BCD[6] at offset 0x12
+    debit = Column(Numeric(12, 2), default=0, nullable=False)
+    credit = Column(Numeric(12, 2), default=0, nullable=False)
     description = Column(String(300), nullable=True)  # split memo, 0x18
     # Per-line job / class; NULL falls back to the transaction header
     job_id = Column(Integer, ForeignKey("jobs.id"), nullable=True)
