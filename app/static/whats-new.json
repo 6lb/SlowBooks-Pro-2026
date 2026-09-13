@@ -1,4 +1,13 @@
 {
+  "2.14.0": {
+    "title": "In and out of a company, and the terms once",
+    "items": [
+      "Opening the app lands in your last company, with the picker one click away on the sign-in screen",
+      "Sign out returns to the company picker — no more closing and reopening to switch companies; the Companies page has a Switch company button",
+      "On a multi-user install the sign-in screen lists the users, so you pick your name and type only your own password",
+      "The first launch shows the short terms once — free forever for what shipped, the forms are aids and filing is yours, no warranty — and the Windows installer shows the full license"
+    ]
+  },
   "2.13.1": {
     "title": "The words the server sends",
     "items": [

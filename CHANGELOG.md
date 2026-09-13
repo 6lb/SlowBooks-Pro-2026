@@ -7,6 +7,8 @@ on what the software does, not on what sprint shipped what.
 
 ## [Unreleased]
 
+### v2.14.0 — In and out of a company, and the terms once
+
 **Opening the app lands in your last company, with the picker one click
 away.** The window opens straight to that company's sign-in screen, which
 offers *Choose a different company*; the picker itself appears when there is
@@ -31,6 +33,8 @@ After that it is the splash it always was. The Windows installer shows the
 full license with an accept step and leaves a copy beside the program. The
 license itself moved to version 2.0 at the same time; every earlier release
 keeps the license it shipped with.
+
+No schema change. An existing company file opens with no upgrade step.
 
 ### v2.13.1 — The words the server sends
 
