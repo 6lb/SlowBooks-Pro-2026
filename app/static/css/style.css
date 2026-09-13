@@ -30,7 +30,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Tahoma&display=swap');
 
 :root {
-    /* -- QB2003 "Default Blue" skin palette (extracted via Resource Hacker) -- */
+    /* -- the classic "Default Blue" palette -- */
     --qb-navy:        #003366;
     --qb-navy-dark:   #002244;
     --qb-navy-mid:    #004488;
@@ -113,8 +113,7 @@ body {
 }
 
 /* ========================================================================
- * TOP BAR — Reconstructed from CQBMenuBar + CQBToolBar
- * Original was a CToolBarCtrl with 24x24 toolbar buttons (IDB_TOOLBAR)
+ * TOP BAR — menu row with 24x24 toolbar buttons
  * ======================================================================== */
 
 #topbar {
@@ -217,9 +216,7 @@ body {
 }
 
 /* ========================================================================
- * SIDEBAR / NAVIGATOR — CQBNavigator "Icon Bar"
- * Original: left-docked panel with 32x32 icons in a vertical CToolBarCtrl
- * Colors from SKIN_BLUE.DAT NavPanel section
+ * SIDEBAR / NAVIGATOR — left-docked panel with 32x32 icons
  * ======================================================================== */
 
 #main-area {
@@ -402,8 +399,7 @@ body {
 }
 
 /* ========================================================================
- * STATUS BAR — CQBStatusBar at bottom of CMainFrame
- * Original showed: "Ready" | Company file path | Current date
+ * STATUS BAR — "Ready" | company file path | current date
  * ======================================================================== */
 
 #statusbar {
@@ -457,8 +453,7 @@ body {
 }
 
 /* ========================================================================
- * BUTTONS — Reconstructed from CQBButton custom control
- * Original had a subtle 3D bevel effect (Windows Classic theme)
+ * BUTTONS — subtle 3D bevel, in the Windows Classic spirit
  * ======================================================================== */
 
 .btn {
@@ -528,8 +523,7 @@ body {
 }
 
 /* ========================================================================
- * TABLES — CListCtrl in Report View mode
- * QB2003 used alternating row colors and thin column separators
+ * TABLES — report view: alternating row colors, thin column separators
  * ======================================================================== */
 
 .table-container {
@@ -715,7 +709,7 @@ td.amount, th.amount {
 
 /* ========================================================================
  * BADGES — Status indicators
- * Original used colored text in the CListCtrl, no pill shapes
+ * Colored text, no pill shapes
  * We kept the pills because they look better, but matched the colors
  * ======================================================================== */
 
@@ -896,8 +890,7 @@ a:hover { text-decoration: underline; }
 }
 
 /* ========================================================================
- * LINE ITEMS TABLE — The invoice/estimate grid
- * QB2003 used CQBGridCtrl, a custom owner-draw CListCtrl subclass
+ * LINE ITEMS TABLE — the invoice/estimate grid
  * ======================================================================== */
 
 .line-items-table {
@@ -1180,7 +1173,7 @@ tr.clickable { cursor: pointer; }
 }
 
 /* ========================================================================
- * GLOBAL SEARCH — CQBSearchEngine @ 0x00250000
+ * GLOBAL SEARCH
  * ======================================================================== */
 
 .tb-search {
