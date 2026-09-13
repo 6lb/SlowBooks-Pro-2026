@@ -7,6 +7,16 @@ on what the software does, not on what sprint shipped what.
 
 ## [Unreleased]
 
+**Sign out goes back to the company picker.** It used to reload the same
+company's password prompt; to open another company, or even to see who the
+users were, you closed SlowBooks and opened it again — and the Companies page
+said so. In the desktop window, Sign out and the new **Switch company** button
+on the Companies page stop that company's server and return to the picker;
+the sign-in screen offers *Choose a different company* too. On a multi-user
+install the sign-in screen lists the users, so a person picks their name and
+types only their own password; names only, never roles, and only before
+sign-in.
+
 **The first launch shows the terms.** The splash that already opens on
 every launch shows the short form of the license once per install — free
 forever for what shipped, the forms are aids and the filer is responsible,

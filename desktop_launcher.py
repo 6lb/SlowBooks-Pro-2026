@@ -738,6 +738,7 @@ class PickerApi:
     def __init__(self, port: int, log_fh=None):
         self._port = port
         self._server: subprocess.Popen | None = None
+        self._window = None  # set by run_window once the window exists
         self._log_fh = log_fh
 
     def open_document_html(self, title: str, html: str) -> dict:
@@ -944,6 +945,35 @@ class PickerApi:
             return company_service.manifest_create_company(name)
         except Exception as exc:  # surfaced in the picker, not a traceback
             return {"success": False, "error": str(exc)}
+
+    def show_picker(self) -> dict:
+        """Back to the company picker without closing the app.
+
+        Signing out used to reload the same company's login screen; the
+        only way to another company, or to see who the users are, was to
+        quit and relaunch — and the Companies page said exactly that. The
+        server for the open company is stopped and the picker page is
+        loaded back into this window. The load is scheduled rather than
+        done inside this call, for the same reason open_company hands its
+        URL back instead of navigating: pywebview resolves a JS promise on
+        the page that made the call, and that page is about to be gone.
+        """
+        import threading
+
+        stop_server(self._server)
+        self._server = None
+        window = self._window
+
+        def _load():
+            time.sleep(0.15)
+            try:
+                if window is not None:
+                    window.load_html(PICKER_HTML)
+            except Exception:
+                pass  # the picker is a convenience; the app is still running
+
+        threading.Thread(target=_load, daemon=True).start()
+        return {"success": True}
 
     def open_company(self, filename: str) -> dict:
         """Launch the company's server and hand the URL back to the picker
@@ -1222,7 +1252,7 @@ def run_window(port: int, log_fh=None) -> int:
     _purge_stale_webview_cache(storage_dir, app_version)
 
     api = PickerApi(port, log_fh)
-    webview.create_window(
+    api._window = webview.create_window(
         "SlowBooks Pro 2026",
         html=PICKER_HTML,
         js_api=api,

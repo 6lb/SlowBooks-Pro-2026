@@ -82,9 +82,12 @@
     const closeBtn = document.getElementById('modal-close-btn');
     if (closeBtn) closeBtn.addEventListener('click', () => typeof closeModal === 'function' && closeModal());
 
-    // Sign out — POSTs to /api/auth/logout, then reloads to splash.
-    // Auth is session-cookie based; the server clears the cookie and the
-    // reload bounces the user back to the login screen.
+    // Sign out — POSTs to /api/auth/logout, then goes back to where you
+    // choose: in the native desktop window, the company picker (the
+    // launcher stops this company's server and reloads the picker page);
+    // in a browser, the sign-in screen, which lists the users on a
+    // multi-user install. It used to reload the same company's password
+    // prompt, and the only way anywhere else was to quit the app.
     const logout = document.getElementById('logout-btn');
     if (logout) logout.addEventListener('click', async () => {
         if (!confirm('Sign out of Slowbooks?')) return;
@@ -92,7 +95,12 @@
             await API.post('/auth/logout', {});
         } catch (_err) {
             // Even on error we want to clear the local UI — the cookie may
-            // already be expired; just reload.
+            // already be expired; carry on.
+        }
+        const shell = window.pywebview && window.pywebview.api;
+        if (shell && typeof shell.show_picker === 'function') {
+            shell.show_picker();
+            return;
         }
         window.location.reload();
     });

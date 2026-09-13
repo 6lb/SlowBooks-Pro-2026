@@ -182,6 +182,32 @@
     // exists, the login form gains a username field. Single-user installs
     // never see it.
     let multiUser = false;
+    let usernames = [];
+
+    // Inside the native desktop window the launcher's bridge is present;
+    // in a browser (Server Edition) it is not, and the picker does not exist.
+    function isDesktopShell() {
+        return typeof window.pywebview !== "undefined" && window.pywebview.api
+            && typeof window.pywebview.api.show_picker === "function";
+    }
+
+    function userSelectHTML() {
+        if (!usernames.length) {
+            return field("auth-username", "Username", {
+                required: true,
+                autocomplete: "username",
+            });
+        }
+        const opts = usernames.map(function (u) {
+            const e = document.createElement("option");
+            e.value = u; e.textContent = u;
+            return e.outerHTML;
+        }).join("");
+        return (
+            '<label for="auth-username" style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Who is signing in?</label>' +
+            '<select id="auth-username" required style="' + inputStyle() + '">' + opts + "</select>"
+        );
+    }
 
     function loginViewHTML() {
         return (
@@ -195,12 +221,7 @@
                 ? "Sign in to continue."
                 : "Enter your password to continue.") +
             "</p>" +
-            (multiUser
-                ? field("auth-username", "Username", {
-                      required: true,
-                      autocomplete: "username",
-                  }) + '<div style="height:10px"></div>'
-                : "") +
+            (multiUser ? userSelectHTML() + '<div style="height:10px"></div>' : "") +
             field("auth-password", "Password", {
                 type: "password",
                 required: true,
@@ -217,6 +238,11 @@
             '<button type="button" id="auth-switch-setup" style="' +
             linkButtonStyle() +
             '">First time? Set up Slowbooks →</button>' +
+            (isDesktopShell()
+                ? '<br><button type="button" id="auth-switch-company" style="' +
+                  linkButtonStyle() +
+                  '">Choose a different company →</button>'
+                : "") +
             "</div>" +
             "</form>"
         );
@@ -224,6 +250,12 @@
 
     function wireLogin(overlay, onSuccess) {
         const form = overlay.querySelector("#auth-form");
+        const switchCompany = overlay.querySelector("#auth-switch-company");
+        if (switchCompany) {
+            switchCompany.addEventListener("click", function () {
+                window.pywebview.api.show_picker();
+            });
+        }
         const input = overlay.querySelector("#auth-password");
         const userInput = overlay.querySelector("#auth-username");
         const errBox = overlay.querySelector("#auth-error");
@@ -443,6 +475,7 @@
         try {
             const status = await checkStatus();
             multiUser = status.multi_user === true;
+            usernames = Array.isArray(status.usernames) ? status.usernames : [];
             existingCompany = {
                 name: status.company_name || "",
                 hasData: status.has_data === true,

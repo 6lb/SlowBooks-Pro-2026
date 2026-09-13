@@ -1,0 +1,126 @@
+"""Sign in, sign out, and getting back to the company picker.
+
+Owner, 2026-09-13: signing out only reloaded the same company's password
+prompt; to open another company, or even to see who the users were, you
+closed SlowBooks and opened it again — and the Companies page said so.
+Now: sign out in the desktop window goes back to the picker (the launcher
+stops the company's server and reloads the picker page); the sign-in
+screen on a multi-user install lists the users; the Companies page has a
+Switch company button; and the sign-in screen itself offers a way to a
+different company on the desktop.
+"""
+
+import re
+import threading
+from pathlib import Path
+
+import desktop_launcher as dl
+
+ROOT = Path(__file__).resolve().parents[1]
+JS = {
+    name: (ROOT / "app/static/js" / name).read_text(encoding="utf-8")
+    for name in ("auth.js", "bootstrap.js", "companies.js")
+}
+
+
+class _Window:
+    def __init__(self):
+        self.loaded = []
+
+    def load_html(self, html):
+        self.loaded.append(html)
+
+
+class _Proc:
+    def __init__(self):
+        self.terminated = False
+
+    def poll(self):
+        return None if not self.terminated else 0
+
+    def terminate(self):
+        self.terminated = True
+
+    def wait(self, timeout=None):
+        return 0
+
+
+def test_show_picker_stops_the_company_and_reloads_the_picker_page(monkeypatch):
+    api = dl.PickerApi(3001)
+    api._window = _Window()
+    api._server = proc = _Proc()
+    done = threading.Event()
+    real_thread = threading.Thread
+
+    class _Sync(real_thread):
+        """run the scheduled load on this thread so the test can see it"""
+
+        def start(self):
+            self.run()
+            done.set()
+
+    monkeypatch.setattr(threading, "Thread", _Sync)
+    monkeypatch.setattr(dl.time, "sleep", lambda s: None)
+    assert api.show_picker() == {"success": True}
+    assert proc.terminated, "the open company's server must be stopped"
+    assert api._server is None
+    assert api._window.loaded == [dl.PICKER_HTML]
+
+
+def test_show_picker_without_a_window_still_stops_the_server(monkeypatch):
+    api = dl.PickerApi(3001)
+    api._server = proc = _Proc()
+    monkeypatch.setattr(dl.time, "sleep", lambda s: None)
+    assert api.show_picker()["success"] is True
+    assert proc.terminated
+
+
+def test_the_launcher_keeps_the_window_it_creates():
+    src = (ROOT / "desktop_launcher.py").read_text(encoding="utf-8")
+    assert re.search(r"api\._window = webview\.create_window\(", src)
+
+
+def test_status_lists_users_only_on_a_multi_user_install_and_only_before_sign_in(
+    client, unauthed_client
+):
+    # single user: no list, even signed out
+    assert "usernames" not in unauthed_client.get("/api/auth/status").json()
+    r = client.post(
+        "/api/users",
+        json={
+            "username": "bookkeeper",
+            "password": "long-enough-pw",
+            "role": "bookkeeper",
+        },
+    )
+    assert r.status_code in (200, 201), r.text
+    signed_out = unauthed_client.get("/api/auth/status").json()
+    assert signed_out["multi_user"] is True
+    assert "bookkeeper" in signed_out["usernames"] and len(signed_out["usernames"]) >= 2
+    assert all(
+        isinstance(u, str) for u in signed_out["usernames"]
+    )  # names only, never roles
+    signed_in = client.get("/api/auth/status").json()
+    assert "usernames" not in signed_in
+
+
+def test_the_page_sends_sign_out_back_to_the_picker_on_the_desktop():
+    boot = JS["bootstrap.js"]
+    body = boot[boot.index("logout-btn") :]
+    assert "shell.show_picker()" in body and "window.location.reload()" in body
+    assert body.index("show_picker") < body.index("window.location.reload()")
+
+
+def test_the_sign_in_screen_lists_users_and_offers_another_company():
+    auth = JS["auth.js"]
+    assert 'select id="auth-username"' in auth
+    assert "status.usernames" in auth
+    assert (
+        "auth-switch-company" in auth and "window.pywebview.api.show_picker()" in auth
+    )
+
+
+def test_the_companies_page_no_longer_tells_people_to_close_the_app():
+    comp = JS["companies.js"]
+    assert "close SlowBooks Pro and open it again" not in comp
+    assert "switchCompany" in comp and "show_picker" in comp

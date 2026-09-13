@@ -113,6 +113,21 @@ def auth_status(request: Request, db: Session = Depends(get_db)):
         # Login UI shows a username field only when this is true.
         "multi_user": is_multi_user(db),
     }
+    if out["multi_user"] and not authenticated:
+        # The names, so the sign-in screen can offer a list instead of a
+        # blank field — the way a desktop bookkeeping package does. Names
+        # only, never roles; and only on a multi-user install, where the
+        # people on the LAN already know each other. Server Edition is
+        # documented for trusted networks; this is part of that trade.
+        from app.models.users import User
+
+        out["usernames"] = [
+            u.username
+            for u in db.query(User)
+            .filter(User.is_active.is_(True))
+            .order_by(User.username)
+            .all()
+        ]
     if setup_needed:
         # First-run setup can be reached on a file that already holds a
         # company's books (a file copied in, or seeded through the API

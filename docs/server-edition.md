@@ -35,6 +35,12 @@ on the network, browse to `http://<host-name>:3001`.
 
 ## Permanent install (starts with Windows, no login needed)
 
+On a multi-user install the sign-in screen lists the usernames, so a person picks
+their name and types only their own password — the way desktop bookkeeping software
+has always worked. Names only, never roles, and only before sign-in. Anyone who can
+reach the port can read that list, which is one more reason Server Edition is for
+trusted networks.
+
 From an **elevated** PowerShell in the folder containing the exe:
 
 ```powershell

@@ -9,16 +9,32 @@
  * database configured at deploy time.
  */
 const CompaniesPage = {
+    _isDesktop() {
+        return typeof window.pywebview !== 'undefined' && window.pywebview.api
+            && typeof window.pywebview.api.show_picker === 'function';
+    },
+
+    async switchCompany() {
+        if (!confirm('Sign out of this company and choose another?')) return;
+        try { await API.post('/auth/logout', {}); } catch (_e) { /* cookie may be gone already */ }
+        window.pywebview.api.show_picker();
+    },
+
     async render() {
         const companies = await API.get('/companies');
         let html = `
             <div class="page-header">
                 <h2>Company Files</h2>
-                <button class="btn btn-primary" onclick="CompaniesPage.showCreate()">+ New Company</button>
+                <div>
+                    ${CompaniesPage._isDesktop() ? '<button class="btn btn-secondary" onclick="CompaniesPage.switchCompany()">Switch company…</button> ' : ''}
+                    <button class="btn btn-primary" onclick="CompaniesPage.showCreate()">+ New Company</button>
+                </div>
             </div>
             <p style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">
                 Each company is stored in its own separate database.
-                To switch companies, close SlowBooks Pro and open it again — you'll be asked which company to open.
+                ${CompaniesPage._isDesktop()
+                    ? 'Switch company takes you back to the company picker; this company is signed out.'
+                    : 'On Server Edition the served company is chosen on the host PC.'}
             </p>`;
 
         if (companies.length === 0) {
