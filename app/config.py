@@ -64,7 +64,7 @@ def resolve_cors_origins(env: dict | None = None) -> list[str]:
 
 CORS_ALLOW_ORIGINS = resolve_cors_origins()
 
-# CCompanyInfo fields — originally at .QBW header offset 0x40
+# Company identity fields.
 COMPANY_NAME = os.getenv("COMPANY_NAME", "My Company")
 COMPANY_ADDRESS = os.getenv("COMPANY_ADDRESS", "")
 COMPANY_PHONE = os.getenv("COMPANY_PHONE", "")

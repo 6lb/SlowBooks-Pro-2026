@@ -305,7 +305,41 @@ of a real DB before shipping.
 **Don't open a public issue for vulnerabilities.** See
 [SECURITY.md](SECURITY.md) for the responsible disclosure path.
 
-## License
+## Contributor Terms
 
-By contributing, you agree your contributions are licensed under the
-same terms as the rest of the repo (see LICENSE).
+You keep the copyright in what you write. By submitting a contribution
+(a pull request, a patch, a fixture, a document) you agree to these terms,
+which exist so the project can keep shipping your work and so the license
+on it can change without going back to every author:
+
+1. **License to the project.** You grant Trent Von Holten, and anyone who
+   receives the Software from him, a perpetual, worldwide, irrevocable,
+   royalty-free, non-exclusive license to use, reproduce, modify,
+   distribute, sublicense, and **relicense** your contribution as part of
+   the Software, under the project's license or any other license he
+   chooses in future. This is the same shape as the Apache and Google
+   contributor agreements: you are not giving up ownership, you are giving
+   the project a license broad enough to be relied on.
+2. **You have the right to grant it.** The contribution is your original
+   work, or you have the right to submit it under these terms — including
+   from your employer if you wrote it on their time or equipment, and
+   including for any third-party code you brought in, whose license you
+   name in the PR.
+3. **Patents.** To the extent you hold patent claims that your contribution
+   would infringe on its own or combined with the Software, you grant the
+   same recipients a license under them for the Software.
+4. **No warranty from you either.** Contributions are provided as-is, the
+   same way the Software is.
+
+**How you agree:** add a sign-off line to every commit —
+
+    git commit -s
+
+— which appends `Signed-off-by: Your Name <you@example.com>`. That line is
+the record that you read these terms and have the right to contribute the
+change. Pull requests without it are asked for it before review, not
+rejected. The PR template repeats the four points as a checkbox.
+
+If you contributed before this section existed (September 2026), your work
+is already in the Software under the license it shipped with; you may be
+asked once to confirm these terms for it, and thank you in advance.
