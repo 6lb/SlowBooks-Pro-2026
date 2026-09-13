@@ -124,3 +124,26 @@ def test_the_companies_page_no_longer_tells_people_to_close_the_app():
     comp = JS["companies.js"]
     assert "close SlowBooks Pro and open it again" not in comp
     assert "switchCompany" in comp and "show_picker" in comp
+
+
+def test_the_picker_opens_the_last_company_on_first_load_only(monkeypatch):
+    """Owner: with companies on disk the app should land in the last one,
+    with the picker one click away — not on the picker every time. But a
+    picker reached by Sign out or Switch company must stay put, or you
+    could never leave."""
+    from app.services import company_service
+
+    monkeypatch.setattr(
+        company_service,
+        "manifest_list_companies",
+        lambda: [{"name": "A", "file": "a.db"}],
+    )
+    monkeypatch.setattr(company_service, "get_last_opened", lambda: "a.db")
+    api = dl.PickerApi(3001)
+    assert api.list_companies()["auto_open"] is True
+    monkeypatch.setattr(dl.time, "sleep", lambda s: None)
+    api.show_picker()
+    assert api.list_companies()["auto_open"] is False
+    # and the page honours it: opens only when auto_open is set and the file is listed
+    assert "info.auto_open && info.last_opened" in dl.PICKER_HTML
+    assert "openCompany(info.last_opened)" in dl.PICKER_HTML

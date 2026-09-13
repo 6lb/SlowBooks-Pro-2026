@@ -7,6 +7,11 @@ on what the software does, not on what sprint shipped what.
 
 ## [Unreleased]
 
+**Opening the app lands in your last company, with the picker one click
+away.** The window opens straight to that company's sign-in screen, which
+offers *Choose a different company*; the picker itself appears when there is
+no last company, or whenever you ask for it.
+
 **Sign out goes back to the company picker.** It used to reload the same
 company's password prompt; to open another company, or even to see who the
 users were, you closed SlowBooks and opened it again — and the Companies page

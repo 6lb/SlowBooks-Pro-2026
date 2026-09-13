@@ -573,6 +573,13 @@ async function refresh() {
   list.querySelectorAll('.company').forEach(function (el) {
     el.onclick = function () { openCompany(el.getAttribute('data-file')); };
   });
+  // First launch of the window: straight into the last company. The
+  // sign-in screen it lands on offers "Choose a different company", and
+  // Sign out comes back here with auto_open off.
+  if (info.auto_open && info.last_opened &&
+      info.companies.some(function (c) { return c.file === info.last_opened; })) {
+    openCompany(info.last_opened);
+  }
 }
 async function openCompany(file) {
   setBusy(true);
@@ -739,6 +746,11 @@ class PickerApi:
         self._port = port
         self._server: subprocess.Popen | None = None
         self._window = None  # set by run_window once the window exists
+        # First load of the picker opens the last company straight to
+        # sign-in (owner, 2026-09-13: "when there are companies it loads to
+        # companies now"); a picker reached by choice — sign out, Switch
+        # company — must not, or you could never leave.
+        self._auto_open = True
         self._log_fh = log_fh
 
     def open_document_html(self, title: str, html: str) -> dict:
@@ -936,6 +948,7 @@ class PickerApi:
         return {
             "companies": company_service.manifest_list_companies(),
             "last_opened": company_service.get_last_opened(),
+            "auto_open": self._auto_open,
         }
 
     def create_company(self, name: str) -> dict:
@@ -962,6 +975,7 @@ class PickerApi:
 
         stop_server(self._server)
         self._server = None
+        self._auto_open = False  # the person asked for the picker; show it
         window = self._window
 
         def _load():
