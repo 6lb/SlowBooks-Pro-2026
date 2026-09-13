@@ -341,5 +341,5 @@ change. Pull requests without it are asked for it before review, not
 rejected. The PR template repeats the four points as a checkbox.
 
 If you contributed before this section existed (September 2026), your work
-is already in the Software under the license it shipped with; you may be
-asked once to confirm these terms for it, and thank you in advance.
+is in the Software under the license it shipped with, and these terms apply
+to anything you contribute from here on. Thank you.

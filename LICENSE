@@ -23,10 +23,11 @@ Copyright (c) 2026 Trent Von Holten
    associated documentation, and any Derivative Work.
 
    "Derivative Work" means a work that copies, modifies, or incorporates
-   any substantial part of the Software's source code, templates, or
-   assets. A program that only interoperates with the Software through
-   its HTTP API, its import and export formats, or its company-file
-   format, without incorporating its code, is NOT a Derivative Work.
+   any part of the Software's source code, templates, or assets, in whole
+   or in part. A program that only interoperates with the Software
+   through its HTTP API, its import and export formats, or its
+   company-file format, without incorporating its code, is NOT a
+   Derivative Work.
 
    "Licensor" means the copyright holder named above.
 
@@ -59,7 +60,7 @@ Copyright (c) 2026 Trent Von Holten
    You may NOT:
 
    (a) sell, rent, lease, or sublicense the Software or a Derivative Work,
-       or charge a fee for a copy of it;
+       in whole or in part, or charge a fee for a copy of it;
    (b) offer the Software or a Derivative Work to third parties as a
        hosted, managed, or online service, whether paid directly or
        through a subscription, support fee, bundle, or advertising —
@@ -69,8 +70,10 @@ Copyright (c) 2026 Trent Von Holten
        books for your own clients is internal use and is permitted under
        Section 2(b); selling those clients access to the Software itself
        is not;
-   (c) include the Software or a Derivative Work in a product that is
-       sold, or in a paid service, except as permitted by Section 2(d);
+   (c) include the Software or a Derivative Work, in whole or in part, in
+       a product that is sold or in a service offered to third parties —
+       including as a feature, module, or component of a larger paid
+       product or hosted service — except as permitted by Section 2(d);
    (d) remove or alter the copyright notice, this license, or the
        attribution in Section 4;
    (e) use the Licensor's name, or the names "SlowBooks" and "SlowBooks
