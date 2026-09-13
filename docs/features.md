@@ -423,9 +423,9 @@ All endpoints under `/api/`. Swagger docs at `/docs`. 300+ routes across 50 rout
 ### Authentication
 | Endpoint | Methods | Description |
 |----------|---------|-------------|
-| `/api/auth/status` | GET | Auth state: `{setup_needed, authenticated}` |
+| `/api/auth/status` | GET | Auth state: `{setup_needed, authenticated, multi_user}`; signed out on a multi-user install, also `usernames` (names only) |
 | `/api/auth/setup` | POST | First-run password setup (min 8 chars) |
-| `/api/auth/login` | POST | Login with password |
+| `/api/auth/login` | POST | Login with password (`username` too once there is more than one user) |
 | `/api/auth/logout` | POST | Clear session |
 
 ### Core (Original)

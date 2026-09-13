@@ -17,6 +17,19 @@ etiquette. Collaborators have full branch and Actions access: push
 branches, trigger workflows, download artifacts. CI (black/ruff,
 pytest, CodeQL, pip-audit) must be green before review.
 
+## How releases work
+
+A merged PR ships with the next release, not on merge. Every release goes
+through a three-platform gate in the QA repo,
+[SlowBooks-Pro-Testing](https://github.com/VonHoltenCodes/SlowBooks-Pro-Testing):
+a `release/<version>` PR there records the exact commit under test, each
+platform (Windows 11, macOS on Apple Silicon, Linux + Docker/PostgreSQL)
+installs the build from that commit and posts findings, and the tag is cut
+from the recorded commit only. A fix the gate finds goes on top of the
+release branch as an ordinary commit and the gate re-runs on the new
+commit. The gate records are public; `reports/<version>/GATE.md` is the
+checklist and each platform's findings file is the evidence.
+
 ## First contribution? Fork — no access needed
 
 Pushing a branch to this repo requires collaborator access, which new
@@ -42,20 +55,27 @@ contributors don't have (and don't need). The standard flow:
 Good work gets merged under your name; polish happens in follow-up
 commits, so don't hold a PR hostage to perfection.
 
-GitGuardian flags the fake credentials in `tests/` from time to time —
-those are pytest fixtures, tracked as dismissed false positives.
+GitGuardian's GitHub App scans every PR and does not read the repo's
+`.gitguardian.yaml` (that file configures the `ggshield` CLI only). Its
+pair detector fires when a `"username"` and a `"password"` literal sit
+next to each other in one object, so in tests keep fixture passwords in a
+named constant away from the username key. Scripts take a password from
+the environment (`SLOWBOOKS_QA_PASSWORD`), never as a default. Nothing in
+this repository — test, fixture, docstring, default — is ever a real
+credential.
 
 ## Platform maintainers
 
-- **Windows + Docker + server**: @VonHoltenCodes (releases signed via
-  Azure Trusted Signing in CI)
-- **macOS**: [@ContractorKeith](https://github.com/ContractorKeith) —
+- **Windows, Linux, Docker, Server Edition**: @VonHoltenCodes. Windows
+  releases are signed via Azure Trusted Signing in CI.
+- **macOS**: [@ContractorKeith](https://github.com/ContractorKeith)
   maintains the `.app`/DMG build and release tooling in
-  `packaging/macos/`. Since v2.5.3, releases sign, notarize, and staple
+  `packaging/macos/` and reviews macOS. Releases sign, notarize and staple
   in CI with the project's Apple Developer ID (credentials live only in
   repo secrets); Keith's local run of the same tooling is the documented
-  fallback, and installed-app acceptance on real hardware remains a
-  human gate.
+  fallback. Apple Silicon only — Intel Macs run the Docker image.
+- **Release QA** runs in the testing repo above, one lane per platform,
+  with a person at the installed program for the checks that need one.
 
 ## Branch naming
 
@@ -63,6 +83,8 @@ those are pytest fixtures, tracked as dismissed false positives.
   Claude Code on the web integration
 - `fix/<short-topic>` — bug fixes
 - `feat/<short-topic>` — new features
+- `docs/<short-topic>` — documentation only
+- `parked/<short-topic>` — work held back on purpose (see *Project rules*)
 - Use kebab-case for the topic (`feat/portal-cookie-session`, not
   `feat/portal_cookie_session`)
 
@@ -78,8 +100,9 @@ We don't enforce Conventional Commits, but commit messages should:
   over alternatives. Wrap body lines around 72 chars.
 - Reference related issues with `Fixes #123` or `Refs #45` in the body
 
-Commits authored via Claude Code on the web carry a session URL at the
-bottom; leave that in.
+Sign every commit off (`git commit -s`) — that line is how you agree to
+the Contributor Terms at the end of this file. Commits authored via Claude
+Code on the web carry a session URL at the bottom; leave that in.
 
 ## Code style
 
@@ -88,19 +111,56 @@ bottom; leave that in.
 - **JavaScript**: vanilla JS (no build step). Match the surrounding
   style; no semicolons-vs-not crusade.
 - **Tests**: every behavior change comes with a test. Tests live under
-  `tests/` and are run with `pytest tests/ -q`. The full suite runs in
-  under 60 seconds with no network dependencies. Common fixtures
-  (defined in [tests/conftest.py](tests/conftest.py)):
+  `tests/` and are run with `pytest tests/ -q`. The full suite (about
+  2,240 tests) runs in a few minutes with no network dependencies; run
+  the files you touched while iterating and the whole suite before
+  pushing. Common fixtures (defined in
+  [tests/conftest.py](tests/conftest.py)):
   - `client` — authenticated `TestClient`. Use for most tests.
   - `unauthed_client` — `TestClient` with no session. Use only for
     auth-flow tests (setup, login, logout).
-  - `db_session` — isolated SQLAlchemy session backed by an in-memory
-    SQLite DB; cleared between tests.
+  - `db_session` — isolated SQLAlchemy session on the suite's file-backed
+    SQLite database; each test runs inside a savepoint that is rolled
+    back afterwards, and a sentinel fails the suite if a test leaks a
+    row. Read `tests/test_*` for a test that talks to the ledger before
+    writing one.
   - `seed_accounts` — chart-of-accounts pre-loaded.
   - `seed_customer` — a single active customer pre-loaded.
 
   Picking the wrong client fixture is the most common newbie miss:
   using `unauthed_client` against a protected route silently 401s.
+
+## Project rules
+
+Decisions the owner has made that a contributor would not guess from the
+code. A PR that crosses one is asked to change, however good the code is.
+
+- **USA only.** Tax, payroll, currency and address handling target the
+  United States. Forks for other countries are welcome; the product does
+  not claim support it cannot test.
+- **The company's words, everywhere.** A nonprofit sees Pledge, Donor and
+  Donation Receipt on every screen, every server message and every printed
+  page. Page text goes through `T()` / `Terms.text` in JS and
+  `terms.text()` in Python (every HTTP error crosses one chokepoint in
+  `app/main.py`). **A posting says what the document is**, in the
+  document's own words at posting time (`document_label`), and history is
+  never rewritten. `scripts/audit/vocab_walk.py` measures a running server
+  in both company types; the gate runs it.
+- **A saved email template is the user's.** The product never rewrites
+  one. Defaults may change; a template someone saved is left alone.
+- **No importer for a named third-party format without a real exported
+  file.** A format built from documentation alone is parked on a
+  `parked/*` branch, contributor's commits intact, until a real file
+  arrives. An importer that is absent fails loudly; one that is present
+  and wrong lands silently in someone's books.
+- **An error never tells the reader to do something they cannot do.**
+  A frozen desktop build has no interpreter and no `alembic`; an
+  instruction has to be one the program itself can carry out (the
+  `--_repair-schema` flag exists for this reason).
+- **The desktop and Server Edition are one program.** A page that only
+  makes sense under the desktop shell checks for it
+  (`window.pywebview.api`) and hides itself in a browser; the API never
+  assumes a window.
 
 ## Adding a feature
 
