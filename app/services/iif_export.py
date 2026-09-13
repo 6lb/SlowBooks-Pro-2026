@@ -2,10 +2,9 @@
 # IIF Export Service — Intuit Interchange Format (Tab-Delimited)
 # Generates .iif files compatible with QuickBooks Pro 2003 (Build 12.0.3190)
 #
-# IIF format spec reverse-engineered from:
-#   1. Intuit SDK documentation (QBFC 5.0, qbXML 4.0 IIF appendix)
-#   2. QB2003 Pro Revision R7 disc (mounted /mnt from sr1)
-#   3. File > Utilities > Export menu in QB2003 (observed output format)
+# IIF format from the published Intuit SDK documentation (QBFC 5.0, qbXML
+# 4.0 IIF appendix) and the files QuickBooks Pro 2003 itself writes from
+# File > Utilities > Export.
 #
 # Format rules:
 #   - Tab-delimited fields, \r\n line endings (Windows)

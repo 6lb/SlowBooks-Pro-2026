@@ -641,7 +641,7 @@ const App = {
             }
         });
 
-        // Start clock — CMainFrame::OnTimer() at 1-second interval (WM_TIMER id=1)
+        // Start clock — ticks once a second
         App.updateClock();
         setInterval(App.updateClock, 60000);
 

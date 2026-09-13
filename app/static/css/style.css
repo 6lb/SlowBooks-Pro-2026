@@ -745,8 +745,7 @@ td.amount, th.amount {
 .badge-labor   { background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; }
 
 /* ========================================================================
- * MODAL — Mimics QB2003's popup data entry windows
- * Original used WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU dialog style
+ * MODAL — in the spirit of QB2003's popup data entry windows
  * ======================================================================== */
 
 .modal-overlay {
@@ -1015,7 +1014,6 @@ tr.clickable { cursor: pointer; }
 
 /* ========================================================================
  * SPLASH / ABOUT DIALOG
- * Reconstructed from CAboutDlg (IDD_ABOUTBOX resource id=0x0064)
  * ======================================================================== */
 
 .splash-overlay {
