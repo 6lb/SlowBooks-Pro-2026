@@ -7,6 +7,14 @@ codebase — this file is the index, not the source of truth.
 ## Before tagging
 
 - Add the release's entry to `app/static/whats-new.json` (version key must equal `app/__init__.py` `__version__`; one line per headline change — the splash and About dialog show it) and move the CHANGELOG `[Unreleased]` items under the version.
+- **The docs pass — every release, not only the big ones.**
+  - `README.md`: *What's New* keeps the last three releases (add the new one, drop the oldest); the "N operations in vX.Y" line uses the count from the gated checkout (`app.openapi()`: paths × methods); the *Documentation* table if a doc was added.
+  - `docs/features.md`: the feature described, and its rows in the API tables. A doc line that names a feature must point at a route that exists.
+  - `CONTRIBUTING.md` if the process or a project rule changed.
+  - The site (`~/Projects/slowbookspro.com`): version stamps on every page, the changelog entry and release-list item, the test count, and the **LLM-facing docs** — `htdocs/llms.txt`, `htdocs/ai/agents-template.md` (house rules and the endpoints table), the tally on `htdocs/ai/index.html` — describing the new surface the way an agent needs it: dry-run first, field names, the gotchas the gate found.
+  - A feature that takes a file ships a **template** for it (`htdocs/downloads/` on the site, linked from the product's dialog).
+  - The gate's SHIPPED note is not written until this is done.
+- Three-platform gate in [SlowBooks-Pro-Testing](https://github.com/VonHoltenCodes/SlowBooks-Pro-Testing): the tag is cut from the SHA `reports/<version>/GATE.md` names.
 
 ## 1. Secrets — generate fresh, never commit
 

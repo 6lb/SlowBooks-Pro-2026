@@ -52,6 +52,14 @@ Details, known gaps and how to report a barrier:
 
 ## What's New
 
+**v2.15 — Your chart, from your file.** Import a chart of accounts from a
+CSV in the export's own columns, any spreadsheet with Number / Name / Type,
+or hledger's account list — tested against files hledger itself wrote. A
+dry run shows every row's fate first. Accounts you already have take the
+file's names, including the control accounts the software posts to by
+number, renamed in place and never duplicated, so every document still finds
+its account. Asked for by @tresero (#139, #161).
+
 **v2.14 — In and out of a company, and the terms once.** Opening the
 app lands in your last company. Sign out, a new **Switch company** button
 and *Choose a different company* on the sign-in screen return to the
@@ -72,16 +80,6 @@ back a day until a fixture derived from real exports arrived; a working
 **QuickBooks Online connection** again, contributed by
 @CimarronSiteServices; and a startup repair a frozen build can actually
 run.
-
-**v2.12 — Your chart, your templates, your clipboard.** Delete or
-deactivate the forty-two ordinary accounts in the seeded chart (the fifteen
-the posting code finds by number stay, and can be renamed); preview an
-email template edit against a real invoice before saving it, and see what
-came out blank and why (@mdornich); every Copy button works on a LAN
-address, not only on localhost. Also a security fix: an editable email
-template could read decrypted settings secrets
-([GHSA-c3v4-f43f-4wqm](https://github.com/VonHoltenCodes/SlowBooks-Pro-2026/security/advisories/GHSA-c3v4-f43f-4wqm),
-reported by @mdornich).
 
 Full history, with the reasoning behind each change, in
 **[CHANGELOG.md](CHANGELOG.md)**; the same entries with the test count
@@ -106,7 +104,7 @@ against any of eight providers (xAI Grok, Groq, Cloudflare Workers AI,
 Anthropic Claude, OpenAI, Google Gemini, a Cloudflare Worker you host
 yourself, or any OpenAI-compatible endpoint you name) — keys encrypted at rest with versioned, rotatable ciphertext.
 And the whole app is agent-operable: every install serves a
-self-documenting local REST API (506 operations in v2.14) — point Claude
+self-documenting local REST API (507 operations in v2.15) — point Claude
 Code or any agentic CLI at it; the
 [AI setup guide](https://www.slowbookspro.com/ai/) has the paste-prompt.
 
