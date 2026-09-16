@@ -30,6 +30,14 @@ release branch as an ordinary commit and the gate re-runs on the new
 commit. The gate records are public; `reports/<version>/GATE.md` is the
 checklist and each platform's findings file is the evidence.
 
+Every release also carries its docs pass, before the tag: the README's
+*What's New* and API count, `docs/features.md`, the CHANGELOG section and
+`app/static/whats-new.json` here; and on the site, the version stamps, the
+changelog entry, and the LLM-facing docs (`llms.txt`, the agent
+instructions template, the AI page) describing the new surface the way an
+agent needs it. A feature that takes a file ships a template for it.
+`docs/release-checklist.md` has the list.
+
 ## First contribution? Fork — no access needed
 
 Pushing a branch to this repo requires collaborator access, which new
