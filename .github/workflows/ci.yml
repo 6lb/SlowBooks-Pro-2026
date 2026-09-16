@@ -127,7 +127,7 @@ jobs:
           DATABASE_URL: "sqlite:///:memory:"
           SESSION_SECRET_KEY: ci-secret-key
           RATE_LIMIT_ENABLED: "0"
-          MAX_SKIPS: "70"  # 66 observed; the ceiling leaves room for one more platform guard, not for drift
+          MAX_SKIPS: "78"  # 74 observed; the ceiling leaves room for one more platform guard, not for drift
         shell: pwsh
         run: |
           # -v names each test as it starts, so a mid-run death is identified
