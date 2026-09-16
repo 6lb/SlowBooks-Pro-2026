@@ -269,6 +269,8 @@ const App = {
                     <code>balance -O csv</code>). Accounts you already have are matched by number or
                     name and renamed to the file's names; the control accounts the software posts to by
                     number are kept and renamed, never duplicated.
+                    <a href="/static/downloads/chart-of-accounts-template.csv" download>Download a template</a>
+                    with the columns and a few example rows.
                 </p>
                 <div class="form-group"><label>File</label>
                     <input type="file" name="file" accept=".csv,.txt,.journal" required></div>
