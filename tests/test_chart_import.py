@@ -65,10 +65,16 @@ def test_hledger_accounts_list_creates_the_chart_under_our_numbers(
     assert _by_number(db_session)["1100"].name == "Receivable"
     assert _by_number(db_session)["2000"].name == "Payable"
     assert _by_number(db_session)["2200"].name == "Sales tax payable"
-    # the credit card under liabilities is 2100, marked as a card
+    # `liabilities:credit card` — a parent the file never lists as a row — IS
+    # control 2100, renamed to the file's spelling; the card inside it is its
+    # child, a liability marked as a card
+    folder = accts["Credit card"]
+    assert folder.account_number == "2100"
     visa = accts["Visa"]
-    assert visa.account_number == "2100" and visa.bank_kind == "credit_card"
-    assert visa.account_type.value == "liability"
+    assert visa.parent.account_number == "2100" and visa.bank_kind == "credit_card"
+    assert visa.account_type.value == "liability" and visa.account_number.startswith(
+        "2"
+    )
 
 
 def test_hledger_types_tag_wins_over_the_root_word(client, db_session, seed_accounts):
@@ -290,3 +296,56 @@ def test_service_parses_the_journal_declarations_too():
         ("Checking", "asset", "bank"),
         ("Rent", "expense", None),
     ]
+
+
+# --- the 2.15.0 gate's finding (skytech) --------------------------------------
+
+
+def test_a_parent_segment_named_like_a_control_account_becomes_it_and_the_import_is_idempotent(
+    client, db_session, seed_accounts
+):
+    """`assets:inventory` is never a row in `hledger accounts` output, only a
+    parent. It was being created as a second, active 'Inventory' beside control
+    1300 — and again on every re-import. The parent IS 1300; the tree hangs
+    from the account the ledger posts to."""
+    from app.services.control_accounts import CONTROL_ACCOUNTS
+
+    text = (FIX / "accounts.txt").read_text(encoding="utf-8")
+    plan = _upload(client, text).json()
+    control_names = {name.lower() for name, _ in CONTROL_ACCOUNTS.values()}
+    twins = [
+        r
+        for r in plan["rows"]
+        if r["action"] == "create" and r["name"].lower() in control_names
+    ]
+    assert twins == [], twins
+    by_name = {r["name"]: r for r in plan["rows"]}
+    assert (
+        by_name["Inventory"]["action"] in ("update", "skip")
+        and by_name["Inventory"]["number"] == "1300"
+    )
+    assert (
+        by_name["Credit card"]["action"] in ("update", "skip")
+        and by_name["Credit card"]["number"] == "2100"
+    )
+
+    done = _upload(client, text, dry_run=0).json()
+    # 30 before the fix (two twins); now the two parents take 1300 and 2100,
+    # and Visa becomes a child card instead of taking 2100 itself
+    assert done["created"] == 29, done
+    nums = _by_number(db_session)
+    names = {a.name: a for a in db_session.query(Account).all()}
+    assert names["Neon tubes"].parent.account_number == "1300"
+    assert (
+        names["Visa"].parent.account_number == "2100"
+        and names["Visa"].bank_kind == "credit_card"
+    )
+    active = [a.name for a in names.values() if a.is_active]
+    assert len(active) == len(set(active)), "duplicate active names"
+
+    # the same file again: nothing to do
+    again = _upload(client, text).json()
+    assert again["created"] == 0 and again["updated"] == 0, {
+        r["name"]: r for r in again["rows"] if r["action"] != "skip"
+    }
+    assert nums["1300"].name == "Inventory"

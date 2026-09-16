@@ -443,10 +443,9 @@ def plan_chart_import(db: Session, text: str, replace: bool = False) -> Plan:
     # number or name (csv) -> ("existing", id) | ("new", row index)
     resolved: dict[str, tuple[str, int | str]] = {}
     credit_card_claimed = False
-    # an hledger path that other rows hang from is a container ("liabilities:
-    # credit card"), not the account itself ("...:visa") — it never stands in
-    # for a control account
-    container_paths = {r.parent_ref for r in rows if r.path and r.parent_ref}
+    # by_name keeps the FIRST account of a name, so the seeded control account
+    # wins over any twin an earlier run left behind: a re-import matches the
+    # control account, and the twin is disclosed on the create it would cause.
 
     for i, r in enumerate(rows):
         entry = {
@@ -467,8 +466,14 @@ def plan_chart_import(db: Session, text: str, replace: bool = False) -> Plan:
                 entry["_row"] = r
                 plan.rows.append(entry)
                 continue
-        # 2. the file names one of our control accounts
-        if target is None and r.path not in container_paths:
+        # 2. the file names one of our control accounts. A parent segment
+        #    counts: `assets:inventory` IS 1300 Inventory, and the tree under
+        #    it hangs from the account the ledger posts to — the 2.15.0 gate
+        #    found that parent being created as an active twin of 1300, once
+        #    per import (skytech). The first row naming a card takes 2100; with
+        #    a `liabilities:credit card` folder that is the folder, and the
+        #    cards inside it are its children.
+        if target is None:
             alias = CONTROL_ALIASES.get(r.name.strip().lower())
             if alias is None and r.type == "liability" and r.bank_kind == "credit_card":
                 alias = "2100"
@@ -477,19 +482,10 @@ def plan_chart_import(db: Session, text: str, replace: bool = False) -> Plan:
                     target = by_number[alias]
                     if alias == "2100":
                         credit_card_claimed = True
-        # 3. an account with exactly this name (a container never takes a
-        #    control account: "liabilities:credit card" is the folder, its
-        #    child "visa" is the card the software posts to)
+        # 3. an account with exactly this name
         if target is None:
             same = by_name.get(r.name.strip().lower())
-            if (
-                same is not None
-                and same.id not in matched
-                and not (
-                    r.path in container_paths
-                    and control_accounts.is_control_number(same.account_number)
-                )
-            ):
+            if same is not None and same.id not in matched:
                 if (
                     not r.number
                     or not same.account_number
@@ -549,6 +545,12 @@ def plan_chart_import(db: Session, text: str, replace: bool = False) -> Plan:
             entry["note"] = entry["note"] or (
                 "parent of a listed account" if r.synthesized else ""
             )
+            twin = by_name.get(r.name.strip().lower())
+            if twin is not None:
+                entry["note"] = (entry["note"] + "; " if entry["note"] else "") + (
+                    f"an account named '{twin.name}' already exists as "
+                    f"{twin.account_number or 'unnumbered'} and is matched by another row"
+                )
             resolved[r.path or number] = ("new", i)
             resolved[number] = ("new", i)
             resolved[r.name.lower()] = ("new", i)

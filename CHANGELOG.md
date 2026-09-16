@@ -26,6 +26,13 @@ one in their type's range. *Replace the seeded chart* deactivates every
 unused account the file does not name — control accounts and accounts with
 history stay.
 
+**Found by the gate before the tag:** a parent segment the file never lists
+as a row (`assets:inventory`, `liabilities:credit card`) was being created
+as a second, active *Inventory* beside control 1300 — and again on every
+re-import (skytech, Windows lane). A parent named like a control account is
+now that account, the user's tree hangs from the one the ledger posts to,
+and a re-import of the same file is a no-op.
+
 **Why this took two releases.** #139 asked for exactly this on September 11.
 2.12.0 shipped delete / deactivate / rename of the seeded chart and the issue
 was closed as released, while docs/features.md claimed a chart CSV import
