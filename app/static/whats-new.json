@@ -1,4 +1,13 @@
 {
+  "2.15.0": {
+    "title": "Your chart, from your file",
+    "items": [
+      "Chart of Accounts → Import… reads a CSV in the export's columns, any spreadsheet with Number / Name / Type, or hledger's account list",
+      "A dry run first: every row's fate with a reason, nothing written until you say so",
+      "Accounts you already have take the file's names; the control accounts the software posts to are renamed, never duplicated",
+      "Replace the seeded chart: unused accounts the file does not name are deactivated, control accounts and history stay"
+    ]
+  },
   "2.14.0": {
     "title": "In and out of a company, and the terms once",
     "items": [
