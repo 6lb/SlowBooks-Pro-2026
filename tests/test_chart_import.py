@@ -349,3 +349,24 @@ def test_a_parent_segment_named_like_a_control_account_becomes_it_and_the_import
         r["name"]: r for r in again["rows"] if r["action"] != "skip"
     }
     assert nums["1300"].name == "Inventory"
+
+
+def test_the_shipped_template_imports_cleanly_into_the_seeded_chart(
+    client, db_session, seed_accounts
+):
+    """The template the dialog offers must go through the importer it is a
+    template for: every row lands (create or update), no errors, and its
+    parents resolve. Also pins that the file the site hands out is the
+    same one the app serves."""
+    text = (
+        Path(__file__).parents[1]
+        / "app/static/downloads/chart-of-accounts-template.csv"
+    ).read_text(encoding="utf-8")
+    plan = _upload(client, text).json()
+    assert plan["format"] == "csv" and plan["errors"] == []
+    assert not any(r["action"] == "error" for r in plan["rows"])
+    assert not any("not found" in (r.get("note") or "") for r in plan["rows"]), plan[
+        "rows"
+    ]
+    r = client.get("/static/downloads/chart-of-accounts-template.csv")
+    assert r.status_code == 200 and r.text == text

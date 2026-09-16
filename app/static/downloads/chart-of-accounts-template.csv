@@ -1,0 +1,20 @@
+Number,Name,Type,Parent,Description,Active
+1000,Checking,bank,,Main operating account,true
+1010,Savings,bank,,,true
+1100,Accounts Receivable,asset,,What customers owe,true
+1300,Inventory,asset,,,true
+1310,Neon tubes,asset,1300,Stock on hand,true
+2000,Accounts Payable,liability,,What you owe vendors,true
+2100,Visa,credit card,,,true
+2200,Sales Tax Payable,liability,,,true
+3000,Owner's Equity,equity,,,true
+3200,Retained Earnings,equity,,,true
+4000,Service Income,income,,,true
+4100,Product Sales,income,,,true
+5000,Cost of Goods Sold,cogs,,,true
+6000,Advertising & Marketing,expense,,,true
+6100,Rent,expense,,,true
+6200,Utilities,expense,,,true
+6210,Electric,expense,6200,,true
+6220,Internet,expense,6200,,true
+6900,Old Account,expense,,,false
