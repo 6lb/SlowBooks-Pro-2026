@@ -299,6 +299,20 @@
 [data-theme="dark"] .splash-subtitle { color: var(--qb-gold); }
 [data-theme="dark"] .splash-info { color: var(--text-secondary); }
 [data-theme="dark"] .splash-legal { color: var(--text-muted); }
+/* The licence block and the button that records it. 2.14.0 gave the terms a
+   light panel that only works in the light theme; in dark the text around it
+   goes light while the panel stays a pale grey (2.34:1), and --qb-navy-dark
+   becomes a light blue that vanishes on the gold button (1.13:1). On macOS
+   this splash is the licence record (macbase1, 2.15.0 gate). */
+[data-theme="dark"] .splash-terms {
+    background: #1e2632;
+    border-color: #3a4656;
+    color: #e0e4ec;
+}
+[data-theme="dark"] .splash-terms-title,
+[data-theme="dark"] .splash-terms strong { color: #ffffff; }
+[data-theme="dark"] .splash-terms a { color: #8ab4f8; }
+[data-theme="dark"] .splash-btn { color: #002244; }
 
 /* Line items table */
 [data-theme="dark"] .line-items-table { border-color: var(--panel-border); }
