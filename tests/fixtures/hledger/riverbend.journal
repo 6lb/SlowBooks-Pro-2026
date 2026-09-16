@@ -1,0 +1,135 @@
+; Riverbend Sign & Neon — hledger journal, 2025 fiscal year.
+; A small sign shop's books: the kind of chart an hledger user brings to SlowBooks.
+
+commodity $1,000.00
+
+account assets                          ; type: A
+account assets:bank                     ; type: A
+account assets:bank:checking            ; type: C
+account assets:bank:savings             ; type: C
+account assets:cash:petty cash          ; type: C
+account assets:receivable               ; type: A
+account assets:inventory:neon tubes     ; type: A
+account assets:inventory:acrylic        ; type: A
+account assets:equipment:bending table  ; type: A
+account assets:equipment:plotter        ; type: A
+account liabilities                     ; type: L
+account liabilities:credit card:visa    ; type: L
+account liabilities:payable             ; type: L
+account liabilities:sales tax payable   ; type: L
+account liabilities:loans:truck loan    ; type: L
+account equity                          ; type: E
+account equity:opening balances         ; type: E
+account equity:owner draws              ; type: E
+account revenues                        ; type: R
+account revenues:signs:channel letters  ; type: R
+account revenues:signs:neon             ; type: R
+account revenues:repairs                ; type: R
+account revenues:installation           ; type: R
+account expenses                        ; type: X
+account expenses:materials              ; type: X
+account expenses:rent                   ; type: X
+account expenses:utilities:electric     ; type: X
+account expenses:utilities:internet     ; type: X
+account expenses:vehicle:fuel           ; type: X
+account expenses:vehicle:insurance      ; type: X
+account expenses:payroll:wages          ; type: X
+account expenses:payroll:taxes          ; type: X
+account expenses:advertising            ; type: X
+account expenses:bank fees              ; type: X
+account expenses:software               ; type: X
+
+2025-01-01 * Opening balances
+    assets:bank:checking                        $18,450.00
+    assets:bank:savings                         $12,000.00
+    assets:cash:petty cash                         $200.00
+    assets:inventory:neon tubes                  $3,120.00
+    assets:inventory:acrylic                     $1,875.50
+    assets:equipment:bending table               $4,500.00
+    assets:equipment:plotter                     $2,300.00
+    liabilities:credit card:visa                $-1,240.33
+    liabilities:loans:truck loan               $-14,600.00
+    equity:opening balances
+
+2025-01-06 * Riverbend Dental | Channel letters, front elevation
+    assets:receivable                            $4,800.00
+    revenues:signs:channel letters             $-4,500.00
+    liabilities:sales tax payable                $-300.00
+
+2025-01-08 * Idaho Power
+    expenses:utilities:electric                    $312.40
+    assets:bank:checking
+
+2025-01-10 * Sparkle Fiber
+    expenses:utilities:internet                     $89.99
+    liabilities:credit card:visa
+
+2025-01-15 * Payroll
+    expenses:payroll:wages                       $3,900.00
+    expenses:payroll:taxes                         $298.35
+    assets:bank:checking
+
+2025-01-20 * Riverbend Dental | payment on invoice 1041
+    assets:bank:checking                         $4,800.00
+    assets:receivable
+
+2025-02-01 * Mesa Properties | shop rent
+    expenses:rent                                $1,650.00
+    assets:bank:checking
+
+2025-02-03 * Northwest Neon Supply | tubes and electrodes
+    assets:inventory:neon tubes                    $940.00
+    liabilities:payable
+
+2025-02-11 * The Kettle Cafe | neon window sign
+    assets:bank:checking                         $2,650.00
+    revenues:signs:neon                        $-2,500.00
+    liabilities:sales tax payable                $-150.00
+
+2025-02-14 * Chevron
+    expenses:vehicle:fuel                           $84.10
+    liabilities:credit card:visa
+
+2025-02-18 * Owner draw
+    equity:owner draws                           $1,500.00
+    assets:bank:checking
+
+2025-03-01 * Mesa Properties | shop rent
+    expenses:rent                                $1,650.00
+    assets:bank:checking
+
+2025-03-05 * Boise Auto Body | repair, transformer
+    assets:bank:checking                           $385.00
+    revenues:repairs                              $-385.00
+
+2025-03-09 * Facebook ads
+    expenses:advertising                           $120.00
+    liabilities:credit card:visa
+
+2025-03-12 * Northwest Neon Supply | pay bill
+    liabilities:payable                            $940.00
+    assets:bank:checking
+
+2025-03-15 * First Idaho Bank | monthly fee
+    expenses:bank fees                              $12.00
+    assets:bank:checking
+
+2025-03-22 * Treasure Valley Storage | install, 3 panels
+    assets:receivable                            $1,900.00
+    revenues:installation                      $-1,900.00
+
+2025-03-31 * Adobe
+    expenses:software                               $54.99
+    liabilities:credit card:visa
+
+2025-04-04 * Visa payment
+    liabilities:credit card:visa                 $1,589.41
+    assets:bank:checking
+
+2025-04-15 * Truck loan payment
+    liabilities:loans:truck loan                   $410.00
+    assets:bank:checking
+
+2025-04-20 * Sheet acrylic, 4x8 clear
+    expenses:materials                             $265.00
+    assets:cash:petty cash

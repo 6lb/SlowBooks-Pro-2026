@@ -7,6 +7,33 @@ on what the software does, not on what sprint shipped what.
 
 ## [Unreleased]
 
+### v2.15.0 — Your chart, from your file
+
+**Import a chart of accounts** (#139, #161, @tresero). Chart of Accounts →
+Import… reads a CSV in the columns the export writes, any spreadsheet with
+Number / Name / Type in its header row, or hledger's account list — the real
+output of `hledger accounts`, `accounts --types` and `balance -O csv`, which
+the tests run against files hledger 1.30.1 wrote. The first pass is a dry
+run: every row's fate with a reason, nothing written; the second applies
+that plan. Accounts you already have are matched by number, then by name,
+and renamed to the file's names; when the file names one of the fifteen
+control accounts (Receivable, Payable, Checking, Sales tax payable, a credit
+card under liabilities, ...) that control account takes the file's name
+instead of gaining a twin, so your chart replaces ours and every document
+still finds its posting account. hledger paths keep their hierarchy and
+their full path as the description; rows without a number get the next free
+one in their type's range. *Replace the seeded chart* deactivates every
+unused account the file does not name — control accounts and accounts with
+history stay.
+
+**Why this took two releases.** #139 asked for exactly this on September 11.
+2.12.0 shipped delete / deactivate / rename of the seeded chart and the issue
+was closed as released, while docs/features.md claimed a chart CSV import
+that did not exist. The reporter came back on the 16th. The docs line is
+now true, and the CSV page's result line no longer says "Imported undefined"
+(it read a field the import never returned).
+
+
 ### v2.14.0 — In and out of a company, and the terms once
 
 **Opening the app lands in your last company, with the picker one click

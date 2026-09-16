@@ -19,6 +19,7 @@ from app.services.csv_export import (
     export_accounts,
 )
 from app.services.csv_import import import_customers, import_vendors, import_items
+from app.services.chart_import import import_chart
 from app.services.upload_limits import read_limited
 
 router = APIRouter(prefix="/api/csv", tags=["csv"])
@@ -147,6 +148,28 @@ async def csv_import_items(file: UploadFile = File(...), db: Session = Depends(g
     content = _decode_csv_upload(await read_limited(file, label="CSV file"))
     result = import_items(db, content)
     return result
+
+
+@router.post("/import/accounts")
+async def csv_import_accounts(
+    file: UploadFile = File(...),
+    dry_run: bool = Query(True),
+    replace: bool = Query(False),
+    db: Session = Depends(get_db),
+):
+    """Import a chart of accounts (#139 / #161): SlowBooks' own export
+    columns, any CSV with Number/Name/Type headers, or hledger's account
+    list (`hledger accounts`, `accounts --types`, `balance -O csv`).
+
+    `dry_run=true` (the default) returns the plan and writes nothing; the
+    page shows it and posts again with `dry_run=false` to apply exactly that
+    plan. `replace=true` also deactivates every account the file does not
+    name that has never been posted to — control accounts and accounts with
+    history are kept either way."""
+    content = _decode_csv_upload(await read_limited(file, label="chart file"))
+    if not content.strip():
+        raise HTTPException(status_code=400, detail="The file is empty.")
+    return import_chart(db, content, replace=replace, dry_run=dry_run)
 
 
 @router.post("/import/qb-report")

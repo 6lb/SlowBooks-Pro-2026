@@ -184,6 +184,7 @@ const App = {
                 <h2>Chart of Accounts</h2>
                 <div>
                     ${inactiveCount ? `<button class="btn btn-sm btn-secondary" onclick="App.toggleInactiveAccounts()">${App._showInactiveAccounts ? 'Hide' : 'Show'} ${inactiveCount} inactive</button> ` : ''}
+                    <button class="btn btn-secondary" onclick="App.showChartImport()">Import…</button>
                     <button class="btn btn-primary" onclick="App.showAccountForm()">New Account</button>
                 </div>
             </div>
@@ -253,6 +254,96 @@ const App = {
                     <button type="submit" class="btn btn-primary">${id ? 'Update' : 'Create'} Account</button>
                 </div>
             </form>`);
+    },
+
+    // Import a chart of accounts from a file (#139 / #161). Dry run first:
+    // the server answers with the plan and writes nothing; the second post,
+    // with the same file and the same options, applies exactly that plan.
+    showChartImport() {
+        openModal('Import Chart of Accounts', `
+            <form onsubmit="App.previewChartImport(event)">
+                <p class="hint" style="margin-bottom:10px;">
+                    A CSV in the columns the export writes (Number, Name, Type, optional Parent and
+                    Description), any spreadsheet with those headers, or hledger's account list
+                    (<code>hledger accounts</code>, <code>accounts --types</code>, or
+                    <code>balance -O csv</code>). Accounts you already have are matched by number or
+                    name and renamed to the file's names; the control accounts the software posts to by
+                    number are kept and renamed, never duplicated.
+                </p>
+                <div class="form-group"><label>File</label>
+                    <input type="file" name="file" accept=".csv,.txt,.journal" required></div>
+                <div class="form-group">
+                    <label style="display:flex; gap:8px; align-items:flex-start; font-weight:normal;">
+                        <input type="checkbox" name="replace" style="margin-top:2px;">
+                        <span>Replace the seeded chart: deactivate every account the file does not name
+                        that has never been used. Control accounts and accounts with history stay.</span>
+                    </label>
+                </div>
+                <div id="chart-import-preview"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Preview</button>
+                    <button type="button" class="btn btn-primary" id="chart-import-apply" hidden
+                        onclick="App.applyChartImport()">Import</button>
+                </div>
+            </form>`);
+    },
+
+    async _postChartImport(form, dryRun) {
+        const fd = new FormData();
+        fd.append('file', form.file.files[0]);
+        const replace = form.replace.checked ? 1 : 0;
+        const resp = await fetch(`/api/csv/import/accounts?dry_run=${dryRun ? 1 : 0}&replace=${replace}`,
+            { method: 'POST', body: fd, headers: { 'X-Slowbooks-Desktop': '1' } });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail || 'Import failed');
+        return data;
+    },
+
+    async previewChartImport(e) {
+        e.preventDefault();
+        const form = e.target;
+        App._chartImportForm = form;
+        const box = $('#chart-import-preview');
+        box.innerHTML = '<p class="hint">Reading the file…</p>';
+        try {
+            const plan = await App._postChartImport(form, true);
+            const label = { create: 'Create', update: 'Update', skip: 'Skip', deactivate: 'Deactivate', keep: 'Keep', error: 'Error' };
+            const rows = plan.rows.map(r => `<tr>
+                <td>${label[r.action] || r.action}</td>
+                <td style="font-family:var(--font-mono);">${escapeHtml(r.number || '')}</td>
+                <td>${escapeHtml(r.name)}</td>
+                <td>${escapeHtml(r.type || '')}</td>
+                <td style="font-size:11px; color:var(--text-muted);">${escapeHtml([...(r.changes || []), r.note].filter(Boolean).join('; '))}</td>
+            </tr>`).join('');
+            const errs = plan.errors.map(x => `<li>${escapeHtml(x)}</li>`).join('');
+            const writes = plan.created + plan.updated + plan.deactivated;
+            box.innerHTML = `
+                <p style="margin:8px 0;"><strong>${plan.created} to create, ${plan.updated} to update,
+                ${plan.skipped} already there${plan.replace ? `, ${plan.deactivated} to deactivate, ${plan.kept} kept` : ''}.</strong>
+                Nothing has been written yet.</p>
+                ${errs ? `<ul style="color:var(--danger); font-size:11px; margin:0 0 8px 16px;">${errs}</ul>` : ''}
+                <div class="table-container" style="max-height:320px; overflow:auto;"><table>
+                    <thead><tr><th scope="col">Action</th><th scope="col">Number</th><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Detail</th></tr></thead>
+                    <tbody>${rows}</tbody></table></div>`;
+            const apply = $('#chart-import-apply');
+            apply.hidden = writes === 0;
+            apply.textContent = `Import ${writes} change${writes === 1 ? '' : 's'}`;
+        } catch (err) {
+            box.innerHTML = `<p style="color:var(--danger);">${escapeHtml(err.message)}</p>`;
+            $('#chart-import-apply').hidden = true;
+        }
+    },
+
+    async applyChartImport() {
+        const form = App._chartImportForm;
+        if (!form) return;
+        try {
+            const done = await App._postChartImport(form, false);
+            closeModal();
+            toast(`Chart imported: ${done.created} created, ${done.updated} updated${done.replace ? `, ${done.deactivated} deactivated` : ''}`);
+            App.navigate('#/accounts');
+        } catch (err) { toast(err.message, 'error'); }
     },
 
     async setAccountActive(id, active) {
@@ -376,6 +467,7 @@ const App = {
                                 <option value="customers">${T('Customers')}</option>
                                 <option value="vendors">Vendors</option>
                                 <option value="items">Items</option>
+                                <option value="accounts">Chart of Accounts</option>
                             </select></div>
                         <div class="form-group"><label>CSV File</label>
                             <input type="file" name="file" accept=".csv" required></div>
@@ -393,10 +485,13 @@ const App = {
         const formData = new FormData();
         formData.append('file', form.file.files[0]);
         try {
-            const resp = await fetch(`/api/csv/import/${entity}`, { method: 'POST', body: formData });
+            // The chart import is a dry run by default; this page applies directly.
+            const query = entity === 'accounts' ? '?dry_run=0' : '';
+            const resp = await fetch(`/api/csv/import/${entity}${query}`, { method: 'POST', body: formData });
             const data = await resp.json();
             if (!resp.ok) throw new Error(data.detail || 'Import failed');
-            let html = `<div style="color:var(--success); font-size:11px;">Imported ${data.imported} ${entity}.</div>`;
+            const n = data.created ?? data.imported ?? 0;
+            let html = `<div style="color:var(--success); font-size:11px;">Imported ${n} ${entity === 'accounts' ? 'accounts' : entity}${data.updated ? `, updated ${data.updated}` : ''}${data.skipped ? `, ${data.skipped} already there` : ''}.</div>`;
             if (data.errors && data.errors.length > 0) {
                 html += `<div style="color:var(--danger); font-size:11px; margin-top:6px;">Errors:<br>${data.errors.map(e => escapeHtml(e)).join('<br>')}</div>`;
             }

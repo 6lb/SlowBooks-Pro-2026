@@ -1,0 +1,35 @@
+assets                            ; type: A
+assets:bank                       ; type: A
+assets:bank:checking              ; type: C
+assets:bank:savings               ; type: C
+assets:receivable                 ; type: A
+assets:cash:petty cash            ; type: C
+assets:equipment:bending table    ; type: A
+assets:equipment:plotter          ; type: A
+assets:inventory:neon tubes       ; type: A
+assets:inventory:acrylic          ; type: A
+liabilities                       ; type: L
+liabilities:payable               ; type: L
+liabilities:sales tax payable     ; type: L
+liabilities:credit card:visa      ; type: L
+liabilities:loans:truck loan      ; type: L
+equity                            ; type: E
+equity:opening balances           ; type: E
+equity:owner draws                ; type: E
+revenues                          ; type: R
+revenues:repairs                  ; type: R
+revenues:installation             ; type: R
+revenues:signs:channel letters    ; type: R
+revenues:signs:neon               ; type: R
+expenses                          ; type: X
+expenses:materials                ; type: X
+expenses:rent                     ; type: X
+expenses:advertising              ; type: X
+expenses:bank fees                ; type: X
+expenses:software                 ; type: X
+expenses:payroll:wages            ; type: X
+expenses:payroll:taxes            ; type: X
+expenses:utilities:electric       ; type: X
+expenses:utilities:internet       ; type: X
+expenses:vehicle:fuel             ; type: X
+expenses:vehicle:insurance        ; type: X

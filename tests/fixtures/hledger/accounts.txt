@@ -1,0 +1,35 @@
+assets
+assets:bank
+assets:bank:checking
+assets:bank:savings
+assets:receivable
+assets:cash:petty cash
+assets:equipment:bending table
+assets:equipment:plotter
+assets:inventory:neon tubes
+assets:inventory:acrylic
+liabilities
+liabilities:payable
+liabilities:sales tax payable
+liabilities:credit card:visa
+liabilities:loans:truck loan
+equity
+equity:opening balances
+equity:owner draws
+revenues
+revenues:repairs
+revenues:installation
+revenues:signs:channel letters
+revenues:signs:neon
+expenses
+expenses:materials
+expenses:rent
+expenses:advertising
+expenses:bank fees
+expenses:software
+expenses:payroll:wages
+expenses:payroll:taxes
+expenses:utilities:electric
+expenses:utilities:internet
+expenses:vehicle:fuel
+expenses:vehicle:insurance
