@@ -221,6 +221,20 @@ const DashboardPage = {
                 <tbody>${row(d.this_month)}${row(d.last_month)}</tbody></table>
                 <div style="font-size:11px;margin-top:4px;color:${d.net_change < 0 ? '#a4242b' : '#1f7a36'}">${d.net_change >= 0 ? '▲' : '▼'} ${formatCurrency(Math.abs(d.net_change))} vs last month · <a href="#/reports">Full ${T('P&L')}</a></div>`;
         },
+        pnl_ytd(d) {
+            const max = Math.max(...d.months.map(m => Math.abs(m.cumulative)), 1);
+            const bars = d.months.map(m => `<div style="flex:1;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:flex-end" title="${m.month} cumulative: ${formatCurrency(m.cumulative)}">
+                <div style="width:80%;margin:0 auto;background:${m.cumulative < 0 ? '#a4242b' : 'var(--qb-blue)'};height:${Math.max(2, Math.abs(m.cumulative) / max * 100)}%;border-radius:2px 2px 0 0"></div>
+                <div style="font-size:9px;color:var(--gray-500);margin-top:2px">${m.month}</div></div>`).join('');
+            return `<div class="card-value" style="color:${d.net < 0 ? '#a4242b' : '#1f7a36'}">${formatCurrency(d.net)}</div>
+                <div style="font-size:11px;color:var(--gray-500);margin-bottom:6px">net · ${d.year} year to date</div>
+                <table class="data-table" style="font-size:12px"><tbody>
+                    <tr><td>${T('Income')}</td><td class="amount">${formatCurrency(d.income)}</td></tr>
+                    <tr><td>Expenses</td><td class="amount">${formatCurrency(d.expenses)}</td></tr>
+                </tbody></table>
+                <div style="display:flex;align-items:flex-end;gap:4px;height:70px;margin-top:8px">${bars}</div>
+                <div style="font-size:10px;color:var(--gray-500);margin-top:2px">cumulative net by month · <a href="#/reports">Full ${T('P&L')}</a></div>`;
+        },
         cash_position(d) {
             return `<div class="card-value">${formatCurrency(d.cash)}</div>
                 <div style="font-size:11px;color:var(--gray-500)">in the bank today</div>
@@ -249,6 +263,62 @@ const DashboardPage = {
                 <tbody>${d.items.map(j => `<tr class="clickable" onclick="App.navigate('#/jobs/${j.job_id}')"><td>${escapeHtml(j.customer_name)}: ${escapeHtml(j.job_name)}</td><td class="amount">${formatCurrency(j.revised)}</td><td class="amount">${formatCurrency(j.committed)}</td><td class="amount">${formatCurrency(j.actual)}</td><td class="amount">${formatCurrency(j.projected)}</td><td class="amount" style="font-weight:700;color:${j.revised && j.variance < 0 ? '#a4242b' : '#1f7a36'}">${formatCurrency(j.variance)}</td><td class="amount">${pct(j.pct_used)}</td></tr>`).join('')}</tbody>
                 <tfoot><tr style="font-weight:700;background:var(--gray-50)"><td>All active jobs</td><td class="amount">${formatCurrency(d.totals.revised)}</td><td class="amount">${formatCurrency(d.totals.committed)}</td><td class="amount">${formatCurrency(d.totals.actual)}</td><td class="amount">${formatCurrency(d.totals.projected)}</td><td class="amount">${formatCurrency(d.totals.variance)}</td><td></td></tr></tfoot></table>`;
         },
+        balance_sheet_trend(d) {
+            if (!d.months || !d.months.length) return '<div style="color:var(--gray-500);font-size:12px">No data yet.</div>';
+            // Chart.js needs the canvas in the DOM before Chart(ctx, ...) runs.
+            // setTimeout(0) is a macrotask: it fires after the caller's
+            // innerHTML assignment (a microtask continuation) has landed.
+            setTimeout(() => DashboardPage._renderBsTrendChart(), 0);
+            const last = d.months[d.months.length - 1];
+            const chip = c => `<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${c};vertical-align:middle"></span>`;
+            return `<div style="display:flex;gap:16px;font-size:11px;margin-bottom:4px;flex-wrap:wrap">
+                    <span>${chip('var(--qb-blue)')} Assets ${formatCurrency(last.assets)}</span>
+                    <span>${chip('#ff6b6b')} Liabilities ${formatCurrency(last.liabilities)}</span>
+                    <span>${chip('#00c48f')} ${T('Equity')} ${formatCurrency(last.equity)}</span>
+                </div>
+                <div style="position:relative;height:150px"><canvas id="chart-bs-trend"></canvas></div>
+                <div style="font-size:10px;color:var(--gray-500);margin-top:2px">Month-end balances, last 12 months · <a href="#/reports">Full ${T('Balance Sheet')}</a></div>`;
+        },
+    },
+
+    _bsChart: null,
+
+    _renderBsTrendChart() {
+        const canvas = document.getElementById('chart-bs-trend');
+        if (!canvas) return;
+        const d = (DashboardPage._data || {}).balance_sheet_trend;
+        if (!d || !d.months || typeof Chart === 'undefined') return;
+        if (DashboardPage._bsChart) {
+            try { DashboardPage._bsChart.destroy(); } catch (e) { /* detached */ }
+            DashboardPage._bsChart = null;
+        }
+        const isDark = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark';
+        const theme = {
+            text: isDark ? '#e6e6f0' : '#1a1a28',
+            grid: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+        };
+        const blue = (getComputedStyle(document.documentElement).getPropertyValue('--qb-blue') || '').trim() || '#4a7ebb';
+        const labels = d.months.map(m => `${m.month} ${String(m.year).slice(2)}`);
+        DashboardPage._bsChart = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    { label: 'Assets', data: d.months.map(m => m.assets), borderColor: blue, backgroundColor: 'transparent', tension: 0.3, pointRadius: 2, borderWidth: 2 },
+                    { label: 'Liabilities', data: d.months.map(m => m.liabilities), borderColor: '#ff6b6b', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2, borderWidth: 2 },
+                    { label: T('Equity'), data: d.months.map(m => m.equity), borderColor: '#00c48f', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2, borderWidth: 2 },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: theme.text, font: { size: 9 } }, grid: { color: theme.grid } },
+                    y: { ticks: { color: theme.text, font: { size: 9 } }, grid: { color: theme.grid } },
+                },
+            },
+        });
     },
 };
 window.DashboardPage = DashboardPage;

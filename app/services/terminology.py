@@ -52,7 +52,9 @@ NONPROFIT: dict[str, str] = {
     "P&L": "Activities",
     "P&L by Class": "Activities by Fund",
     "P&L: This Month vs Last": "Activities: This Month vs Last",
+    "P&L: Year to Date": "Activities: Year to Date",
     "Balance Sheet": "Statement of Financial Position",
+    "Balance Sheet Trend": "Statement of Financial Position Trend",
     "Class": "Fund",
     "Classes": "Funds",
     # grants
