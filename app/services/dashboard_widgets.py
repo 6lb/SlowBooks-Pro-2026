@@ -332,7 +332,9 @@ def balance_sheet_trend(db: Session) -> dict:
     ends = []
     year, month = today.year, today.month
     for _ in range(12):
-        ends.append(_month_bounds(year, month)[1])
+        # the current month stops at today: the card says month-to-date, and a
+        # post-dated entry later this month is not a balance anyone holds yet
+        ends.append(min(_month_bounds(year, month)[1], today))
         month -= 1
         if month == 0:
             month = 12

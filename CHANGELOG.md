@@ -7,6 +7,18 @@ on what the software does, not on what sprint shipped what.
 
 ## [Unreleased]
 
+**Two new overview cards, both opt-in** (#166, @jarvis4openclaw): *P&L: Year to
+Date* — income, expenses and net for the year with cumulative net by month —
+and *Balance Sheet Trend* — assets, liabilities and equity at each of the
+last twelve month-ends, the current month to date, as a line chart. The trend
+folds current net income into equity the way the Balance Sheet report does,
+so it balances at every point and its latest point equals the report. Pick
+them under Customize; neither is in a default layout. A nonprofit sees
+Activities, Statement of Financial Position and Net Assets.
+
+**The chart import dialog offers a CSV template** (#164), the same file the
+site hands out, served by the app so an offline install has it.
+
 ### v2.15.0 — Your chart, from your file
 
 **Import a chart of accounts** (#139, #161, @tresero). Chart of Accounts →

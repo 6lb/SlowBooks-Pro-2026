@@ -277,7 +277,7 @@ const DashboardPage = {
                     <span>${chip('#00c48f')} ${T('Equity')} ${formatCurrency(last.equity)}</span>
                 </div>
                 <div style="position:relative;height:150px"><canvas id="chart-bs-trend"></canvas></div>
-                <div style="font-size:10px;color:var(--gray-500);margin-top:2px">Month-end balances, last 12 months · <a href="#/reports">Full ${T('Balance Sheet')}</a></div>`;
+                <div style="font-size:10px;color:var(--gray-500);margin-top:2px">Month-end balances, last 12 months (this month to date) · <a href="#/reports">Full ${T('Balance Sheet')}</a></div>`;
         },
     },
 

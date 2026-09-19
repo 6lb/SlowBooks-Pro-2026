@@ -281,3 +281,18 @@ def test_balance_sheet_trend_matches_report_as_of_today(
     assert trend["assets"] == report["total_assets"]
     assert trend["liabilities"] == report["total_liabilities"]
     assert trend["equity"] == report["total_equity"]
+
+
+def test_the_trends_current_month_stops_at_today(db_session, seed_accounts):
+    """The last point is month-to-date: a post-dated entry later this month is
+    not a balance anyone holds yet, and the card's footer says 'to date'."""
+    from datetime import date
+
+    from app.services.dashboard_widgets import balance_sheet_trend
+
+    out = balance_sheet_trend(db_session)
+    assert len(out["months"]) == 12
+    assert out["months"][-1]["as_of"] == date.today().isoformat()
+    # earlier points are true month-ends, strictly increasing
+    ends = [m["as_of"] for m in out["months"]]
+    assert ends == sorted(ends) and len(set(ends)) == 12
