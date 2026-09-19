@@ -143,6 +143,11 @@ const App = {
         localStorage.setItem('slowbooks-theme', next);
         const btn = $('#theme-toggle');
         if (btn) btn.innerHTML = next === 'dark' ? '&#9788;' : '&#9790;';
+        // Canvas ink is painted, not styled: a chart on screen keeps the old
+        // theme's axis and grid colours until it is redrawn (1.06:1 on the
+        // dashboard trend — skytech, 2.16.0 gate). Pages that draw charts
+        // listen for this and redraw.
+        document.dispatchEvent(new CustomEvent('slowbooks:themechange', { detail: { theme: next } }));
     },
 
     loadTheme() {

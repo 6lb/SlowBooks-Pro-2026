@@ -26,6 +26,12 @@ description read "liabilities and net Assets": the vocabulary swap lowered only
 the first letter of a multi-word replacement. Found on this release's gate; the
 server's swap and the page's carry the same rule.
 
+**A theme toggle redraws the charts on screen.** Canvas ink is painted with the
+theme that was active when the chart was made, so toggling the theme with the
+Balance Sheet Trend on screen left light-mode axis text on a dark panel
+(1.06 : 1) until the next visit; the Analytics page had carried the same flaw
+since it shipped. Found by the Windows lane on this release's gate.
+
 No schema change. An existing company file opens with no upgrade step.
 
 ### v2.15.0 — Your chart, from your file

@@ -322,3 +322,6 @@ const DashboardPage = {
     },
 };
 window.DashboardPage = DashboardPage;
+// A theme toggle with the overview on screen: redraw the trend so its axis
+// text, grid and the Assets line pick up the new theme's colours.
+document.addEventListener('slowbooks:themechange', () => DashboardPage._renderBsTrendChart());
