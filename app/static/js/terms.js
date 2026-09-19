@@ -36,7 +36,6 @@ const TERMS_NONPROFIT = {
     "Net Income": "Change in Net Assets",
     "Equity": "Net Assets",
     "Total Equity": "Total Net Assets",
-    "Equity": "Net Assets",
     "Liabilities + Equity": "Liabilities + Net Assets",
     "Profit & Loss": "Statement of Activities",
     "P&L": "Activities",
