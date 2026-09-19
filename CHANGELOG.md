@@ -21,6 +21,11 @@ Activities, Statement of Financial Position and Net Assets.
 **The chart import dialog offers a CSV template** (#164), the same file the
 site hands out, served by the app so an offline install has it.
 
+**A lower-case word takes a wholly lower-case phrase.** A nonprofit's card
+description read "liabilities and net Assets": the vocabulary swap lowered only
+the first letter of a multi-word replacement. Found on this release's gate; the
+server's swap and the page's carry the same rule.
+
 No schema change. An existing company file opens with no upgrade step.
 
 ### v2.15.0 — Your chart, from your file

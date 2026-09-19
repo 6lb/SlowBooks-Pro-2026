@@ -128,7 +128,13 @@ class Terms:
             if found.isupper() and not (exact or "").isupper():
                 return out.upper()
             if found[0].islower():
-                return out[0].lower() + out[1:]
+                # a lower-case word in running text takes a lower-case phrase:
+                # "equity" -> "net assets", not "net Assets" (2.16.0 gate). An
+                # acronym inside the replacement keeps its capitals.
+                return " ".join(
+                    w if (w.isupper() and len(w) > 1) else w.lower()
+                    for w in out.split(" ")
+                )
             return out
 
         return _WORD_RE.sub(_swap, s)

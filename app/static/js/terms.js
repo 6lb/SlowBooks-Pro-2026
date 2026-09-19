@@ -91,7 +91,11 @@ const Terms = {
             const out = exact ? d[exact] : found;
             // an all-caps KEY (P&L, A/R) is not a shouted sentence
             if (found === found.toUpperCase() && !(exact && exact === exact.toUpperCase())) return out.toUpperCase();
-            if (found[0] === found[0].toLowerCase()) return out[0].toLowerCase() + out.slice(1);
+            // a lower-case word takes a lower-case phrase ("equity" -> "net assets",
+            // not "net Assets"); an acronym inside the replacement keeps its capitals
+            if (found[0] === found[0].toLowerCase()) {
+                return out.split(' ').map(w => (w.length > 1 && w === w.toUpperCase() && /[A-Z]/.test(w)) ? w : w.toLowerCase()).join(' ');
+            }
             return out;
         });
     },

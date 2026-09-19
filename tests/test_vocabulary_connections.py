@@ -200,3 +200,23 @@ def test_the_untagged_job_bucket_is_named_in_the_company_words(client, seed_acco
         r = client.get(path)
         assert r.status_code == 200, (path, r.text)
         assert "No job" not in r.text, path
+
+
+def test_a_lowercase_word_takes_a_wholly_lowercase_phrase():
+    """'equity' in running text became 'net Assets' — only the first letter of
+    a multi-word replacement was lowered. Found on the 2.16.0 gate in a card
+    description. Python and JS carry the same rule."""
+    from pathlib import Path
+
+    from app.services.terminology import Terms
+
+    t = Terms("nonprofit")
+    assert t.text("Assets, liabilities and equity at each month end") == (
+        "Assets, liabilities and net assets at each month end"
+    )
+    assert t.text("Equity at month end") == "Net Assets at month end"
+    assert t.text("income for the year") == "revenue & support for the year"
+    js = (Path(__file__).parents[1] / "app/static/js/terms.js").read_text(
+        encoding="utf-8"
+    )
+    assert "w.toLowerCase()).join(' ')" in js
