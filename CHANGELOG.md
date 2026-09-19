@@ -7,6 +7,8 @@ on what the software does, not on what sprint shipped what.
 
 ## [Unreleased]
 
+### v2.16.0 — The year at a glance
+
 **Two new overview cards, both opt-in** (#166, @jarvis4openclaw): *P&L: Year to
 Date* — income, expenses and net for the year with cumulative net by month —
 and *Balance Sheet Trend* — assets, liabilities and equity at each of the
@@ -18,6 +20,8 @@ Activities, Statement of Financial Position and Net Assets.
 
 **The chart import dialog offers a CSV template** (#164), the same file the
 site hands out, served by the app so an offline install has it.
+
+No schema change. An existing company file opens with no upgrade step.
 
 ### v2.15.0 — Your chart, from your file
 

@@ -52,6 +52,12 @@ Details, known gaps and how to report a barrier:
 
 ## What's New
 
+**v2.16 — The year at a glance.** Two new overview cards, both opt-in under
+Customize: **P&L: Year to Date** with cumulative net by month, and a
+**Balance Sheet Trend** over the last twelve month-ends that balances at
+every point and agrees with the report. Contributed by @jarvis4openclaw
+(#166). The chart of accounts import offers a CSV template.
+
 **v2.15 — Your chart, from your file.** Import a chart of accounts from a
 CSV in the export's own columns, any spreadsheet with Number / Name / Type,
 or hledger's account list — tested against files hledger itself wrote. A
@@ -68,18 +74,6 @@ closing the program. A multi-user install lists the users at sign-in. The
 first launch shows the short form of the license once, and the Windows
 installer shows the full license with an accept step — the first release
 under [LICENSE 2.0](LICENSE).
-
-**v2.13 — Your words, and a file the bank produced.** Every message the
-server sends now uses your company's words: a nonprofit's Pledge screen
-used to say "Invoice not found" under it. And what you post is written in
-the document's own words — a pledge posts as Pledge, a program-fee invoice
-stays Invoice, and the ledger, the covering email and the printed page
-agree. Existing entries keep the words they were posted with. Plus **Bank
-of America detail CSV import**, contributed by @Lazyjimpressions and held
-back a day until a fixture derived from real exports arrived; a working
-**QuickBooks Online connection** again, contributed by
-@CimarronSiteServices; and a startup repair a frozen build can actually
-run.
 
 Full history, with the reasoning behind each change, in
 **[CHANGELOG.md](CHANGELOG.md)**; the same entries with the test count
@@ -104,7 +98,7 @@ against any of eight providers (xAI Grok, Groq, Cloudflare Workers AI,
 Anthropic Claude, OpenAI, Google Gemini, a Cloudflare Worker you host
 yourself, or any OpenAI-compatible endpoint you name) — keys encrypted at rest with versioned, rotatable ciphertext.
 And the whole app is agent-operable: every install serves a
-self-documenting local REST API (507 operations in v2.15) — point Claude
+self-documenting local REST API (507 operations in v2.16) — point Claude
 Code or any agentic CLI at it; the
 [AI setup guide](https://www.slowbookspro.com/ai/) has the paste-prompt.
 

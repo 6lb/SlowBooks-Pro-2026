@@ -1,4 +1,12 @@
 {
+  "2.16.0": {
+    "title": "The year at a glance",
+    "items": [
+      "Two new overview cards under Customize: P&L year to date with cumulative net by month, and a Balance Sheet trend over the last twelve month-ends",
+      "The trend balances at every point and its latest point equals the Balance Sheet report; a nonprofit sees Activities and Statement of Financial Position",
+      "The chart of accounts import dialog offers a CSV template with the columns and example rows"
+    ]
+  },
   "2.15.0": {
     "title": "Your chart, from your file",
     "items": [
