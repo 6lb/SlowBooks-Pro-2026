@@ -276,6 +276,98 @@ def pnl_month(db: Session) -> dict:
     }
 
 
+def pnl_ytd(db: Session) -> dict:
+    """Year-to-date income, expenses and net, plus the cumulative net
+    by month within the year (current month is month-to-date)."""
+    today = date.today()
+    totals = _pl_for(db, date(today.year, 1, 1), today)
+
+    months = []
+    running = 0.0
+    for m in range(1, today.month + 1):
+        start, end = _month_bounds(today.year, m)
+        if end > today:
+            end = today
+        net = _pl_for(db, start, end)["net"]
+        running += net
+        months.append(
+            {"month": start.strftime("%b"), "net": net, "cumulative": running}
+        )
+    return {
+        "year": today.year,
+        "income": totals["income"],
+        "expenses": totals["expenses"],
+        "net": totals["net"],
+        "months": months,
+    }
+
+
+def _totals_by_type_to(db: Session, date_end: date) -> dict:
+    """Cumulative debit/credit totals per account type, from inception
+    through date_end. One grouped query, at most six rows."""
+    rows = (
+        db.query(
+            Account.account_type,
+            func.coalesce(func.sum(TransactionLine.debit), 0),
+            func.coalesce(func.sum(TransactionLine.credit), 0),
+        )
+        .join(Transaction, TransactionLine.transaction_id == Transaction.id)
+        .join(Account, Account.id == TransactionLine.account_id)
+        .filter(Transaction.date <= date_end)
+        .group_by(Account.account_type)
+        .all()
+    )
+    return {atype: (Decimal(str(dr)), Decimal(str(cr))) for atype, dr, cr in rows}
+
+
+def balance_sheet_trend(db: Session) -> dict:
+    """Assets, liabilities and equity at each of the last 12 month-ends.
+
+    Mirrors /api/reports/balance-sheet semantics: balance-sheet accounts
+    carry their natural-balance cumulative total, and current net income
+    (income − cogs − expenses, which this app never closes into equity)
+    folds into equity so the series actually balances.
+    """
+    today = date.today()
+    ends = []
+    year, month = today.year, today.month
+    for _ in range(12):
+        ends.append(_month_bounds(year, month)[1])
+        month -= 1
+        if month == 0:
+            month = 12
+            year -= 1
+    ends.reverse()  # oldest → newest; the last is the current month-to-date
+
+    months = []
+    for e in ends:
+        by_type = _totals_by_type_to(db, e)
+
+        def _net(acct_type: AccountType, debit_normal: bool) -> Decimal:
+            dr, cr = by_type.get(acct_type, (Decimal(0), Decimal(0)))
+            return (dr - cr) if debit_normal else (cr - dr)
+
+        assets = _net(AccountType.ASSET, True)
+        liabilities = _net(AccountType.LIABILITY, False)
+        equity_base = _net(AccountType.EQUITY, False)
+        net_income = (
+            _net(AccountType.INCOME, False)
+            - _net(AccountType.COGS, True)
+            - _net(AccountType.EXPENSE, True)
+        )
+        months.append(
+            {
+                "month": e.strftime("%b"),
+                "year": e.year,
+                "as_of": e.isoformat(),
+                "assets": float(assets),
+                "liabilities": float(liabilities),
+                "equity": float(equity_base + net_income),
+            }
+        )
+    return {"months": months, "as_of": today.isoformat()}
+
+
 def cash_position(db: Session) -> dict:
     """Cash on hand (active bank accounts) and a simple 30-day forecast:
     cash + receivables due within 30 days − payables due within 30 days.
@@ -460,6 +552,18 @@ WIDGETS: dict[str, tuple[str, str, str, Callable[[Session], dict]]] = {
         "half",
         "Income, expenses and net for this month beside last month",
         pnl_month,
+    ),
+    "pnl_ytd": (
+        "P&L: Year to Date",
+        "half",
+        "Income, expenses and net for the year so far, with cumulative net by month",
+        pnl_ytd,
+    ),
+    "balance_sheet_trend": (
+        "Balance Sheet Trend",
+        "full",
+        "Assets, liabilities and equity at each month end, last 12 months",
+        balance_sheet_trend,
     ),
     "cash_position": (
         "Cash Position",

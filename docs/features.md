@@ -643,8 +643,10 @@ All read endpoints accept `?period=month|quarter|year` (or `mtd/qtd/ytd`), or ex
   seeded from estimates, drill-down job page (budget / committed / actual /
   projected / variance), Job Budget vs Actual report.
 - Customizable overview: show / hide / reorder dashboard cards per user, a
-  catalog of cards (P&L this month vs last, cash position + 30-day forecast,
-  open POs, receipts to review, jobs budget vs actual), reset to standard.
+  catalog of cards (P&L this month vs last, P&L year to date with cumulative
+  net by month, balance sheet trend over 12 month-ends, cash position + 30-day
+  forecast, open POs, receipts to review, jobs budget vs actual), reset to
+  standard.
 - Export parity: IIF export covers classes (list + CLASS column), Customer:Job
   rows, bills, deposits and sales receipts; CSV export adds bills, deposits,
   sales receipts, classes and jobs. Full export re-imports cleanly.
