@@ -7,6 +7,22 @@ on what the software does, not on what sprint shipped what.
 
 ## [Unreleased]
 
+**Wave's full export imports its journals** (#169, @rcavatar1-debug). Wave's
+"Get all transactions" file heads its sides *Debit Amount (Two Column
+Approach)* and *Credit Amount (Two Column Approach)*; neither was recognised,
+so every line read 0.00, the dry run said "14,372 journals ready to import",
+and the import wrote none of them. The same file's *Amount (One column)* is
+signed by what it does to the account, not by side, and is no longer read as
+"positive = debit" when the file has its own debit and credit columns.
+
+**A ledger whose amounts all read zero is refused, by name.** 0 = 0
+balances, so an unrecognised amount column passed the dry run and imported
+nothing — the hole behind this report and behind 2.11.1's Wave fix before it,
+which fixed the headers and not the hole. The dry run now fails with the
+file's own header row in the message, for every migration source; a few
+amount-less journals among real ones are a warning and are counted as
+skipped in the import result.
+
 ### v2.16.0 — The year at a glance
 
 **Two new overview cards, both opt-in** (#166, @jarvis4openclaw): *P&L: Year to

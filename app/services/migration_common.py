@@ -117,6 +117,33 @@ def dry_run_bundle(db: Session, bundle: dict, parsers: dict, source_label: str) 
     known |= {strip_code_suffix(a["name"]) for a in accounts}
     known |= {a.name.lower() for a in db.query(Account).all()}
 
+    # A journal whose every line is 0.00 "balances" — and then posts nothing.
+    # That is what an unrecognised amount column looks like from here: the
+    # dry run passed 14,372 journals and the import wrote none (#169; the
+    # same shape as 2.11.1's Wave report fix, which fixed the headers and not
+    # the hole). A file with amounts we could not read is refused, by name.
+    empty = [
+        g
+        for g in journals
+        if g and all(r["debit"] == 0 and r["credit"] == 0 for r in g)
+    ]
+    if journals and len(empty) == len(journals):
+        header = (bundle["gl"].lstrip("\ufeff").splitlines() or [""])[0]
+        errors.append(
+            f"Every one of the {len(journals)} journals came out as 0.00 — the "
+            f"debit / credit columns in the ledger file were not recognised, so "
+            f"nothing would be imported. The file's header row is: {header[:300]}"
+        )
+    elif empty:
+        refs = [
+            str(g[0].get("journal") or g[0].get("reference") or g[0]["date"])
+            for g in empty[:5]
+        ]
+        warnings.append(
+            f"{len(empty)} journal(s) have no amounts and will be skipped "
+            f"(first: {', '.join(refs)})"
+        )
+
     simulated: dict[str, Decimal] = {}
     for group in journals:
         total = sum(r["debit"] - r["credit"] for r in group)
@@ -303,7 +330,13 @@ def run_import_bundle(
         posted += 1
 
     db.commit()
-    return {**verdict, "imported_accounts": created, "imported_journals": posted}
+    return {
+        **verdict,
+        "imported_accounts": created,
+        "imported_journals": posted,
+        # journals the file held that posted nothing (all-zero lines)
+        "skipped_journals": len([g for g in journals if g]) - posted,
+    }
 
 
 def build_code_map(accounts: list[dict]) -> dict[str, str]:

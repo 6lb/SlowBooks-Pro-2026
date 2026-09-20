@@ -99,6 +99,14 @@ def _map_type(raw: str):
 classify_filename = make_classifier()
 
 
+def _has_two_column_pair(row: dict) -> bool:
+    """True when the file has its own debit and credit columns."""
+    heads = {(k or "").strip().lstrip("\ufeff").lower() for k in row}
+    return any(h.startswith("debit") for h in heads) and any(
+        h.startswith("credit") for h in heads
+    )
+
+
 def parse_coa(csv_text: str) -> tuple[list[dict], list[str]]:
     accounts, errors = [], []
     for i, row in enumerate(sniff_reader(csv_text), start=2):
@@ -138,13 +146,35 @@ def parse_gl(csv_text: str) -> tuple[list[dict], list[str]]:
         if not account and not date_raw:
             continue
         try:
+            # Wave's full export ("Get all transactions" -> accounting.csv)
+            # heads its sides "Debit Amount (Two Column Approach)" and
+            # "Credit Amount (Two Column Approach)". Neither was an alias, so
+            # every line read 0 / 0 (#169).
             debit = parse_amount(
-                field(row, "debit amount", "debit", "debit (in business currency)")
+                field(
+                    row,
+                    "debit amount (two column approach)",
+                    "debit amount",
+                    "debit",
+                    "debit (in business currency)",
+                )
             )
             credit = parse_amount(
-                field(row, "credit amount", "credit", "credit (in business currency)")
+                field(
+                    row,
+                    "credit amount (two column approach)",
+                    "credit amount",
+                    "credit",
+                    "credit (in business currency)",
+                )
             )
-            if debit == 0 and credit == 0:
+            # accounting.csv ALSO carries "Amount (One column)", signed by
+            # what the amount does to the account (a sale is positive on the
+            # bank line and on the income line), not by side. Reading it as
+            # "positive = debit" made every journal unbalanced by debit +
+            # credit. It is only a side-signed fallback for exports that have
+            # no two-column pair at all.
+            if debit == 0 and credit == 0 and not _has_two_column_pair(row):
                 # Single signed Amount column: positive = debit
                 signed = parse_amount(
                     field(
