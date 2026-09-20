@@ -139,7 +139,7 @@ _PARSERS = {"coa": parse_coa, "gl": parse_gl, "tb": parse_tb}
 
 
 def dry_run(db: Session, bundle: dict) -> dict:
-    return dry_run_bundle(db, bundle, _PARSERS, LABEL)
+    return dry_run_bundle(db, bundle, _PARSERS, LABEL, "gnucash_import")
 
 
 def run_import(db: Session, bundle: dict) -> dict:

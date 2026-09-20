@@ -167,3 +167,40 @@ def test_a_few_empty_journals_are_a_warning_not_a_refusal(
     )
     done = _wave(client, "import", gl).json()
     assert done["imported_journals"] == 2 and done["skipped_journals"] == 1
+
+
+def test_a_second_click_on_import_does_not_double_the_books(
+    client, db_session, seed_accounts
+):
+    """The reporter of #169 clicked Import four times. Once the journals do
+    import, a repeat must skip what is already there and say so."""
+    from app.models.transactions import Transaction
+
+    gl = _accounting_csv(True)
+    first = _wave(client, "import", gl).json()
+    assert first["imported_journals"] == 2 and first["duplicate_journals"] == 0
+
+    dry = _wave(client, "dry-run", gl).json()
+    assert dry["ok"] and dry["duplicate_journals"] == 2
+    assert any(
+        "already in the books" in w and "2 of the 2" in w for w in dry["warnings"]
+    )
+
+    again = _wave(client, "import", gl).json()
+    assert again["ok"] and again["imported_journals"] == 0
+    assert again["duplicate_journals"] == 2 and again["skipped_journals"] == 0
+    db_session.expire_all()
+    assert (
+        db_session.query(Transaction)
+        .filter(Transaction.source_type == "wave_import")
+        .count()
+        == 2
+    )
+
+    # a later export with one new transaction: only the new one posts
+    more = gl + (
+        "T9,2025-02-01,Checking,Sale,Sale,40.00,40.00,,\n"
+        "T9,2025-02-01,Sales,Sale,Sale,40.00,,40.00,\n"
+    )
+    third = _wave(client, "import", more).json()
+    assert third["imported_journals"] == 1 and third["duplicate_journals"] == 2

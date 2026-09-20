@@ -220,7 +220,7 @@ def _parsers_for(bundle: dict) -> dict:
 
 
 def dry_run(db: Session, bundle: dict) -> dict:
-    return dry_run_bundle(db, bundle, _parsers_for(bundle), "MYOB")
+    return dry_run_bundle(db, bundle, _parsers_for(bundle), "MYOB", "myob_import")
 
 
 def run_import(db: Session, bundle: dict) -> dict:

@@ -3,7 +3,8 @@
     "title": "Wave's full export imports its journals",
     "items": [
       "Migrating from Wave: the full \"Get all transactions\" export now imports its journals — its debit and credit columns were not recognised, so the dry run passed and nothing was imported",
-      "For every migration source, a ledger whose amounts all read zero is refused by the dry run, with the file's own header row in the message"
+      "For every migration source, a ledger whose amounts all read zero is refused by the dry run, with the file's own header row in the message",
+      "A second click on Import no longer posts the same journals again: what an earlier import already brought in is skipped, and the dry run says how many"
     ]
   },
   "2.16.0": {

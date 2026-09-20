@@ -160,7 +160,7 @@ _PARSERS = {"coa": parse_coa, "gl": parse_gl, "tb": parse_tb}
 
 
 def dry_run(db: Session, bundle: dict) -> dict:
-    return dry_run_bundle(db, bundle, _PARSERS, "Xero")
+    return dry_run_bundle(db, bundle, _PARSERS, "Xero", "xero_import")
 
 
 def run_import(db: Session, bundle: dict) -> dict:

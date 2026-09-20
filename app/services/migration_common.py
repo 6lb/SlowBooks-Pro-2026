@@ -25,6 +25,7 @@ from decimal import Decimal, InvalidOperation
 from sqlalchemy.orm import Session
 
 from app.models.accounts import Account
+from app.models.transactions import Transaction
 from app.services.accounting import _q, create_journal_entry
 from app.services.safe_errors import DataProblem
 
@@ -85,7 +86,33 @@ def strip_code_suffix(name: str) -> str:
 # ── The engine ───────────────────────────────────────────────────────────
 
 
-def dry_run_bundle(db: Session, bundle: dict, parsers: dict, source_label: str) -> dict:
+def _group_reference(group: list[dict]) -> str | None:
+    first = group[0]
+    ref = first.get("journal") or first.get("reference") or None
+    return str(ref)[:100] if ref else None
+
+
+def already_imported(db: Session, source_type: str | None) -> set[str]:
+    """References this source has already posted. A second click on Import —
+    the reporter of #169 clicked four times — must not double the books."""
+    if not source_type:
+        return set()
+    rows = (
+        db.query(Transaction.reference)
+        .filter(Transaction.source_type == source_type)
+        .filter(Transaction.reference.isnot(None))
+        .all()
+    )
+    return {r[0] for r in rows}
+
+
+def dry_run_bundle(
+    db: Session,
+    bundle: dict,
+    parsers: dict,
+    source_label: str,
+    source_type: str | None = None,
+) -> dict:
     """Validate a bundle {kind: csv_text}. Nothing is written."""
     errors: list[str] = []
     warnings: list[str] = []
@@ -142,6 +169,15 @@ def dry_run_bundle(db: Session, bundle: dict, parsers: dict, source_label: str) 
         warnings.append(
             f"{len(empty)} journal(s) have no amounts and will be skipped "
             f"(first: {', '.join(refs)})"
+        )
+
+    seen = already_imported(db, source_type)
+    duplicates = [g for g in journals if g and _group_reference(g) in seen]
+    if duplicates:
+        warnings.append(
+            f"{len(duplicates)} of the {len(journals)} journals are already in "
+            f"the books from an earlier import (same transaction id) and will "
+            f"be skipped, not imported twice"
         )
 
     simulated: dict[str, Decimal] = {}
@@ -215,6 +251,7 @@ def dry_run_bundle(db: Session, bundle: dict, parsers: dict, source_label: str) 
         "warnings": warnings,
         "accounts": len(accounts),
         "journals": len(journals),
+        "duplicate_journals": len(duplicates),
         "opening_balances": opening_balances,
     }
 
@@ -223,7 +260,7 @@ def run_import_bundle(
     db: Session, bundle: dict, parsers: dict, source_type: str, source_label: str
 ) -> dict:
     """Execute the import. Refuses when the dry-run fails."""
-    verdict = dry_run_bundle(db, bundle, parsers, source_label)
+    verdict = dry_run_bundle(db, bundle, parsers, source_label, source_type)
     if not verdict["ok"]:
         return {**verdict, "imported_accounts": 0, "imported_journals": 0}
 
@@ -273,7 +310,14 @@ def run_import_bundle(
                     "description": f"Opening balance — {acct.name}",
                 }
             )
-        if ob_lines:
+        opening_desc = f"{source_label} migration — opening balances"
+        already_opened = (
+            db.query(Transaction.id)
+            .filter(Transaction.source_type == "opening_balance")
+            .filter(Transaction.description == opening_desc)
+            .first()
+        )
+        if ob_lines and not already_opened:
             create_journal_entry(
                 db,
                 first_date - timedelta(days=1),
@@ -284,7 +328,12 @@ def run_import_bundle(
             )
 
     posted = 0
+    duplicates = 0
+    seen = already_imported(db, source_type)
     for group in journals:
+        if group and _group_reference(group) in seen:
+            duplicates += 1
+            continue
         lines = []
         for row in group:
             # Exact name first (disambiguated duplicates keep their code
@@ -335,7 +384,9 @@ def run_import_bundle(
         "imported_accounts": created,
         "imported_journals": posted,
         # journals the file held that posted nothing (all-zero lines)
-        "skipped_journals": len([g for g in journals if g]) - posted,
+        "skipped_journals": len([g for g in journals if g]) - posted - duplicates,
+        # journals an earlier import already posted (same reference)
+        "duplicate_journals": duplicates,
     }
 
 

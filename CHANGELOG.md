@@ -25,6 +25,13 @@ file's own header row in the message, for every migration source; a few
 amount-less journals among real ones are a warning and are counted as
 skipped in the import result.
 
+**A second click on Import does not double the books.** Nothing stopped a
+repeat import from posting every journal again. A journal whose transaction
+id an earlier import from the same source already posted is skipped; the dry
+run says how many, the result carries `duplicate_journals`, and a later
+export with new transactions imports only the new ones. The synthesized
+opening-balance journal is likewise posted once.
+
 No schema change. An existing company file opens with no upgrade step.
 
 ### v2.16.0 — The year at a glance
