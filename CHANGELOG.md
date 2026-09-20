@@ -7,6 +7,8 @@ on what the software does, not on what sprint shipped what.
 
 ## [Unreleased]
 
+### v2.16.1 — Wave's full export imports its journals
+
 **Wave's full export imports its journals** (#169, @rcavatar1-debug). Wave's
 "Get all transactions" file heads its sides *Debit Amount (Two Column
 Approach)* and *Credit Amount (Two Column Approach)*; neither was recognised,
@@ -22,6 +24,8 @@ which fixed the headers and not the hole. The dry run now fails with the
 file's own header row in the message, for every migration source; a few
 amount-less journals among real ones are a warning and are counted as
 skipped in the import result.
+
+No schema change. An existing company file opens with no upgrade step.
 
 ### v2.16.0 — The year at a glance
 
