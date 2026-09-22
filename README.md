@@ -239,6 +239,7 @@ Production checklist: **[docs/release-checklist.md](docs/release-checklist.md)**
 | [docs/payroll-hr-module.md](docs/payroll-hr-module.md) | Payroll / HR module reference |
 | [docs/release-checklist.md](docs/release-checklist.md) | Production deployment checklist |
 | [docs/tls-proxy-setup.md](docs/tls-proxy-setup.md) | Real certs in front of Slowbooks (Caddy, nginx, Traefik) |
+| [docs/cloud-hosting.md](docs/cloud-hosting.md) | Your own books on a cloud server: VPS, Docker, Caddy, backups off the box, what it does and does not give you |
 | [docs/security-hardening.md](docs/security-hardening.md) | Security pass — what changed, why, how it's tested |
 | [docs/hipaa-compliance.md](docs/hipaa-compliance.md) | HIPAA mapping — honest gap list included |
 | [docs/wiring-audit.md](docs/wiring-audit.md) | Frontend ↔ backend drift audit methodology |
