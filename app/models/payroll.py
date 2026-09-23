@@ -89,18 +89,18 @@ class Employee(Base):
     last_name = Column(String(100), nullable=False)
     ssn_last_four = Column(String(4), nullable=True)
     pay_type = Column(Enum(PayType), default=PayType.HOURLY)
-    pay_rate = Column(Numeric(12, 2), default=0)  # hourly rate or annual salary
+    pay_rate = Column(Numeric(15, 2), default=0)  # hourly rate or annual salary
     pay_frequency = Column(Enum(PayFrequency), default=PayFrequency.BIWEEKLY)
     filing_status = Column(Enum(FilingStatus), default=FilingStatus.SINGLE)
 
     # --- 2020+ Form W-4 (the redesign removed "allowances" entirely) ---
     multiple_jobs = Column(Boolean, default=False)  # Step 2(c) checkbox
     dependents_amount = Column(
-        Numeric(12, 2), default=0
+        Numeric(15, 2), default=0
     )  # Step 3 ($2000/child + $500/other)
-    other_income_annual = Column(Numeric(12, 2), default=0)  # Step 4(a)
-    deductions_annual = Column(Numeric(12, 2), default=0)  # Step 4(b)
-    extra_withholding = Column(Numeric(12, 2), default=0)  # Step 4(c) per pay period
+    other_income_annual = Column(Numeric(15, 2), default=0)  # Step 4(a)
+    deductions_annual = Column(Numeric(15, 2), default=0)  # Step 4(b)
+    extra_withholding = Column(Numeric(15, 2), default=0)  # Step 4(c) per pay period
 
     address1 = Column(String(200), nullable=True)
     address2 = Column(String(200), nullable=True)
@@ -122,12 +122,12 @@ class Employee(Base):
     # (county / city / school district) rate in percent where the state
     # requires one (IN, MD, OH, PA, MI cities ...).
     state_allowances = Column(Integer, nullable=False, default=0)
-    state_extra_withholding = Column(Numeric(12, 2), nullable=False, default=0)
+    state_extra_withholding = Column(Numeric(15, 2), nullable=False, default=0)
     state_rate_override = Column(Numeric(6, 3), nullable=True)
     local_tax_rate = Column(Numeric(6, 3), nullable=True)
     # Job costing: loaded hourly cost (blank = pay rate; salary / 2080) and a
     # burden % that overrides the labor cost type's
-    cost_rate = Column(Numeric(12, 2), nullable=True)
+    cost_rate = Column(Numeric(15, 2), nullable=True)
     burden_pct = Column(Numeric(6, 2), nullable=True)
     # Benefits engine: the group (template) whose benefit codes apply to
     # this employee unless an EmployeeBenefit assignment overrides them.
@@ -195,12 +195,12 @@ class PayRun(Base):
     status = Column(Enum(PayRunStatus), default=PayRunStatus.DRAFT)
     run_type = Column(Enum(PayRunType), default=PayRunType.REGULAR)
 
-    total_gross = Column(Numeric(12, 2), default=0)
-    total_net = Column(Numeric(12, 2), default=0)
-    total_taxes = Column(Numeric(12, 2), default=0)
-    total_employer_taxes = Column(Numeric(12, 2), default=0)
+    total_gross = Column(Numeric(15, 2), default=0)
+    total_net = Column(Numeric(15, 2), default=0)
+    total_taxes = Column(Numeric(15, 2), default=0)
+    total_employer_taxes = Column(Numeric(15, 2), default=0)
     # Employer-paid benefits (company cost, not withheld from anyone)
-    total_employer_benefits = Column(Numeric(12, 2), default=0)
+    total_employer_benefits = Column(Numeric(15, 2), default=0)
     transaction_id = Column(Integer, ForeignKey("transactions.id"), nullable=True)
     # The Job Cost Entry that distributed this run's actual labor burden
     # to jobs (labor cost type burden_method = "payroll")
@@ -232,37 +232,37 @@ class PayStub(Base):
     overtime_hours = Column(Numeric(10, 2), default=0)
     doubletime_hours = Column(Numeric(10, 2), default=0)
 
-    gross_pay = Column(Numeric(12, 2), default=0)
+    gross_pay = Column(Numeric(15, 2), default=0)
 
     # Employee-side withholding
-    federal_tax = Column(Numeric(12, 2), default=0)
-    state_tax = Column(Numeric(12, 2), default=0)  # state income tax
+    federal_tax = Column(Numeric(15, 2), default=0)
+    state_tax = Column(Numeric(15, 2), default=0)  # state income tax
     state_other_employee = Column(
-        Numeric(12, 2), default=0
+        Numeric(15, 2), default=0
     )  # WA PFML/Cares, SDI, PFL...
-    ss_tax = Column(Numeric(12, 2), default=0)  # Social Security 6.2% (employee)
-    medicare_tax = Column(Numeric(12, 2), default=0)  # Medicare 1.45% + 0.9% addl
-    pretax_deductions = Column(Numeric(12, 2), default=0)
-    posttax_deductions = Column(Numeric(12, 2), default=0)
-    garnishments = Column(Numeric(12, 2), default=0)
+    ss_tax = Column(Numeric(15, 2), default=0)  # Social Security 6.2% (employee)
+    medicare_tax = Column(Numeric(15, 2), default=0)  # Medicare 1.45% + 0.9% addl
+    pretax_deductions = Column(Numeric(15, 2), default=0)
+    posttax_deductions = Column(Numeric(15, 2), default=0)
+    garnishments = Column(Numeric(15, 2), default=0)
     # Non-taxable accountable-plan reimbursements — added to the check but not
     # part of gross wages and not taxed.
-    reimbursements = Column(Numeric(12, 2), default=0)
-    net_pay = Column(Numeric(12, 2), default=0)
+    reimbursements = Column(Numeric(15, 2), default=0)
+    net_pay = Column(Numeric(15, 2), default=0)
 
     # Work-location state for this stub (multi-state employees) — drives SUTA
     # situs and state withholding independently of the employee's home state.
     work_state = Column(String(2), nullable=True)
 
     # Employer-side taxes (not withheld from the employee — company expense)
-    employer_ss_tax = Column(Numeric(12, 2), default=0)
-    employer_medicare_tax = Column(Numeric(12, 2), default=0)
-    futa_tax = Column(Numeric(12, 2), default=0)
-    suta_tax = Column(Numeric(12, 2), default=0)
-    state_other_employer = Column(Numeric(12, 2), default=0)  # WA PFML employer, L&I...
+    employer_ss_tax = Column(Numeric(15, 2), default=0)
+    employer_medicare_tax = Column(Numeric(15, 2), default=0)
+    futa_tax = Column(Numeric(15, 2), default=0)
+    suta_tax = Column(Numeric(15, 2), default=0)
+    state_other_employer = Column(Numeric(15, 2), default=0)  # WA PFML employer, L&I...
     # Employer-paid benefit contributions for this stub (sum of the
     # PayStubBenefit employer amounts)
-    employer_benefits = Column(Numeric(12, 2), default=0)
+    employer_benefits = Column(Numeric(15, 2), default=0)
 
     # JSON blob with the fully itemized line-by-line breakdown, used to render
     # pay stubs and tax forms without re-running the calculator.

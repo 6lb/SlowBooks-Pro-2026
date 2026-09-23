@@ -48,7 +48,7 @@ class Job(Base):
     start_date = Column(Date, nullable=True)
     projected_end_date = Column(Date, nullable=True)
     end_date = Column(Date, nullable=True)
-    contract_amount = Column(Numeric(12, 2), nullable=True)
+    contract_amount = Column(Numeric(15, 2), nullable=True)
     notes = Column(Text, nullable=True)
     is_active = Column(Boolean, nullable=False, default=True)
 

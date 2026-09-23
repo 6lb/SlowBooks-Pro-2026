@@ -39,7 +39,7 @@ class BankAccount(Base):
     # Pre-2.10 the register kept its own balance here. The balance is now
     # the linked GL account's; this holds the old number until the user
     # posts it as an opening balance or dismisses it (Banking page banner).
-    legacy_balance = Column(Numeric(12, 2), nullable=True)
+    legacy_balance = Column(Numeric(15, 2), nullable=True)
     is_active = Column(Boolean, default=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -60,7 +60,7 @@ class BankTransaction(Base):
     )
     date = Column(Date, nullable=False, index=True)
     amount = Column(
-        Numeric(12, 2), nullable=False
+        Numeric(15, 2), nullable=False
     )  # positive=deposit, negative=withdrawal
     payee = Column(String(200), nullable=True)
     description = Column(String(500), nullable=True)
@@ -101,11 +101,11 @@ class Reconciliation(Base):
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=True)
     bank_account_id = Column(Integer, ForeignKey("bank_accounts.id"), nullable=True)
     statement_date = Column(Date, nullable=False)
-    statement_balance = Column(Numeric(12, 2), nullable=False)
+    statement_balance = Column(Numeric(15, 2), nullable=False)
     # The prior completed statement's balance; cleared_total is stamped on
     # completion so the history reads without recomputing.
-    beginning_balance = Column(Numeric(12, 2), nullable=False, default=0)
-    cleared_total = Column(Numeric(12, 2), nullable=True)
+    beginning_balance = Column(Numeric(15, 2), nullable=False, default=0)
+    cleared_total = Column(Numeric(15, 2), nullable=True)
     status = Column(
         Enum(ReconciliationStatus), default=ReconciliationStatus.IN_PROGRESS
     )

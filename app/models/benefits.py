@@ -141,11 +141,11 @@ class BenefitRate(Base):
     # Dollars (fixed_amount, amount_per_hour) or percent (percent_*)
     employee_rate = Column(Numeric(12, 4), nullable=False, default=0)
     employer_rate = Column(Numeric(12, 4), nullable=False, default=0)
-    per_period_cap = Column(Numeric(12, 2), nullable=True)
-    annual_cap = Column(Numeric(12, 2), nullable=True)
+    per_period_cap = Column(Numeric(15, 2), nullable=True)
+    annual_cap = Column(Numeric(15, 2), nullable=True)
     # Only wages up to this YTD ceiling count toward a percent-method code
-    wage_base_ceiling = Column(Numeric(12, 2), nullable=True)
-    employer_annual_cap = Column(Numeric(12, 2), nullable=True)
+    wage_base_ceiling = Column(Numeric(15, 2), nullable=True)
+    employer_annual_cap = Column(Numeric(15, 2), nullable=True)
     # match_percent: employer matches employer_rate % of the employee's
     # contribution, on at most this percent of gross
     employer_match_limit_pct = Column(Numeric(6, 2), nullable=True)
@@ -193,8 +193,8 @@ class EmployeeGroupBenefit(Base):
     benefit_code_id = Column(Integer, ForeignKey("benefit_codes.id"), nullable=False)
     employee_rate = Column(Numeric(12, 4), nullable=True)
     employer_rate = Column(Numeric(12, 4), nullable=True)
-    per_period_cap = Column(Numeric(12, 2), nullable=True)
-    annual_cap = Column(Numeric(12, 2), nullable=True)
+    per_period_cap = Column(Numeric(15, 2), nullable=True)
+    annual_cap = Column(Numeric(15, 2), nullable=True)
 
     group = relationship("EmployeeGroup", back_populates="codes")
     benefit_code = relationship("BenefitCode")
@@ -213,10 +213,10 @@ class EmployeeBenefit(Base):
     # Overrides; NULL = take the group's value, then the code's dated rate
     employee_rate = Column(Numeric(12, 4), nullable=True)
     employer_rate = Column(Numeric(12, 4), nullable=True)
-    per_period_cap = Column(Numeric(12, 2), nullable=True)
-    annual_cap = Column(Numeric(12, 2), nullable=True)
+    per_period_cap = Column(Numeric(15, 2), nullable=True)
+    annual_cap = Column(Numeric(15, 2), nullable=True)
     # Running balance for balance-tracking codes (loans). NULL = not tracked.
-    balance_remaining = Column(Numeric(12, 2), nullable=True)
+    balance_remaining = Column(Numeric(15, 2), nullable=True)
     start_date = Column(Date, nullable=True)
     end_date = Column(Date, nullable=True)
     is_active = Column(Boolean, nullable=False, default=True)
@@ -245,8 +245,8 @@ class BenefitYTD(Base):
     )
     benefit_code_id = Column(Integer, ForeignKey("benefit_codes.id"), nullable=False)
     year = Column(Integer, nullable=False)
-    employee_amount = Column(Numeric(12, 2), nullable=False, default=0)
-    employer_amount = Column(Numeric(12, 2), nullable=False, default=0)
+    employee_amount = Column(Numeric(15, 2), nullable=False, default=0)
+    employer_amount = Column(Numeric(15, 2), nullable=False, default=0)
     updated_at = Column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
@@ -283,8 +283,8 @@ class PayStubBenefit(Base):
     burden_routing = Column(String(12), nullable=False, default="fringe_pool")
     rule_json = Column(Text, nullable=True)
     # The amounts
-    employee_amount = Column(Numeric(12, 2), nullable=False, default=0)
-    employer_amount = Column(Numeric(12, 2), nullable=False, default=0)
+    employee_amount = Column(Numeric(15, 2), nullable=False, default=0)
+    employer_amount = Column(Numeric(15, 2), nullable=False, default=0)
 
     pay_stub = relationship("PayStub", back_populates="benefits")
     benefit_code = relationship("BenefitCode")

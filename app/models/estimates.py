@@ -50,10 +50,10 @@ class Estimate(Base):
     bill_state = Column(String(50), nullable=True)
     bill_zip = Column(String(20), nullable=True)
 
-    subtotal = Column(Numeric(12, 2), default=0)
+    subtotal = Column(Numeric(15, 2), default=0)
     tax_rate = Column(Numeric(5, 4), default=0)
-    tax_amount = Column(Numeric(12, 2), default=0)
-    total = Column(Numeric(12, 2), default=0)
+    tax_amount = Column(Numeric(15, 2), default=0)
+    total = Column(Numeric(15, 2), default=0)
 
     notes = Column(Text, nullable=True)
     converted_invoice_id = Column(
@@ -90,8 +90,8 @@ class EstimateLine(Base):
     item_id = Column(Integer, ForeignKey("items.id"), nullable=True)
     description = Column(Text, nullable=True)
     quantity = Column(Numeric(10, 2), default=1)
-    rate = Column(Numeric(12, 2), default=0)
-    amount = Column(Numeric(12, 2), default=0)
+    rate = Column(Numeric(15, 2), default=0)
+    amount = Column(Numeric(15, 2), default=0)
     class_name = Column(String(100), nullable=True)
     # Per-line job; NULL falls back to the document header
     job_id = Column(Integer, ForeignKey("jobs.id"), nullable=True)

@@ -42,7 +42,7 @@ class Account(Base):
     description = Column(String(500), nullable=True)
     is_active = Column(Boolean, default=True)
     is_system = Column(Boolean, default=False)  # seed accounts can't be deleted
-    balance = Column(Numeric(12, 2), default=0)
+    balance = Column(Numeric(15, 2), default=0)
     # "bank" | "credit_card" | NULL. The register, the feed review queue,
     # reconciliation, transfers and every "paid from / deposit to" picker
     # key off this — not off account numbers or names (issue #114).

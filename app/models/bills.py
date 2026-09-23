@@ -49,12 +49,12 @@ class Bill(Base):
     terms = Column(String(50), default="Net 30")
     ref_number = Column(String(100), nullable=True)
 
-    subtotal = Column(Numeric(12, 2), default=0)
+    subtotal = Column(Numeric(15, 2), default=0)
     tax_rate = Column(Numeric(5, 4), default=0)
-    tax_amount = Column(Numeric(12, 2), default=0)
-    total = Column(Numeric(12, 2), default=0)
-    amount_paid = Column(Numeric(12, 2), default=0)
-    balance_due = Column(Numeric(12, 2), default=0)
+    tax_amount = Column(Numeric(15, 2), default=0)
+    total = Column(Numeric(15, 2), default=0)
+    amount_paid = Column(Numeric(15, 2), default=0)
+    balance_due = Column(Numeric(15, 2), default=0)
 
     notes = Column(Text, nullable=True)
     transaction_id = Column(Integer, ForeignKey("transactions.id"), nullable=True)
@@ -97,8 +97,8 @@ class BillLine(Base):
     )  # expense account
     description = Column(Text, nullable=True)
     quantity = Column(Numeric(10, 2), default=1)
-    rate = Column(Numeric(12, 2), default=0)
-    amount = Column(Numeric(12, 2), default=0)
+    rate = Column(Numeric(15, 2), default=0)
+    amount = Column(Numeric(15, 2), default=0)
     # Per-line job / class; NULL falls back to the transaction header
     job_id = Column(Integer, ForeignKey("jobs.id"), nullable=True)
     class_id = Column(Integer, ForeignKey("classes.id"), nullable=True)
@@ -122,7 +122,7 @@ class BillPayment(Base):
     id = Column(Integer, primary_key=True, index=True)
     vendor_id = Column(Integer, ForeignKey("vendors.id"), nullable=False)
     date = Column(Date, nullable=False)
-    amount = Column(Numeric(12, 2), nullable=False)
+    amount = Column(Numeric(15, 2), nullable=False)
     method = Column(String(50), nullable=True)
     check_number = Column(String(50), nullable=True)
     pay_from_account_id = Column(Integer, ForeignKey("accounts.id"), nullable=True)
@@ -155,7 +155,7 @@ class BillPaymentAllocation(Base):
     bill_id = Column(
         Integer, ForeignKey("bills.id", ondelete="RESTRICT"), nullable=False
     )
-    amount = Column(Numeric(12, 2), nullable=False)
+    amount = Column(Numeric(15, 2), nullable=False)
 
     bill_payment = relationship("BillPayment", back_populates="allocations")
     bill = relationship("Bill", backref="payment_allocations")

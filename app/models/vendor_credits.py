@@ -57,12 +57,12 @@ class VendorCredit(Base):
     ref_number = Column(String(100), nullable=True)
 
     date = Column(Date, nullable=False)
-    subtotal = Column(Numeric(12, 2), default=0)
+    subtotal = Column(Numeric(15, 2), default=0)
     tax_rate = Column(Numeric(5, 4), default=0)
-    tax_amount = Column(Numeric(12, 2), default=0)
-    total = Column(Numeric(12, 2), default=0)
-    amount_applied = Column(Numeric(12, 2), default=0)
-    balance_remaining = Column(Numeric(12, 2), default=0)
+    tax_amount = Column(Numeric(15, 2), default=0)
+    total = Column(Numeric(15, 2), default=0)
+    amount_applied = Column(Numeric(15, 2), default=0)
+    balance_remaining = Column(Numeric(15, 2), default=0)
 
     notes = Column(Text, nullable=True)
     transaction_id = Column(Integer, ForeignKey("transactions.id"), nullable=True)
@@ -111,8 +111,8 @@ class VendorCreditLine(Base):
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=True)
     description = Column(Text, nullable=True)
     quantity = Column(Numeric(10, 2), default=1)
-    rate = Column(Numeric(12, 2), default=0)
-    amount = Column(Numeric(12, 2), default=0)
+    rate = Column(Numeric(15, 2), default=0)
+    amount = Column(Numeric(15, 2), default=0)
     # Per-line job / class; NULL falls back to the header
     job_id = Column(Integer, ForeignKey("jobs.id"), nullable=True)
     class_id = Column(Integer, ForeignKey("classes.id"), nullable=True)
@@ -135,7 +135,7 @@ class VendorCreditApplication(Base):
         index=True,
     )
     bill_id = Column(Integer, ForeignKey("bills.id"), nullable=False, index=True)
-    amount = Column(Numeric(12, 2), nullable=False)
+    amount = Column(Numeric(15, 2), nullable=False)
 
     vendor_credit = relationship("VendorCredit", back_populates="applications")
     bill = relationship("Bill", backref="vendor_credit_applications")

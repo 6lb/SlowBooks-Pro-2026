@@ -63,12 +63,12 @@ class Invoice(Base):
     ship_state = Column(String(50), nullable=True)
     ship_zip = Column(String(20), nullable=True)
 
-    subtotal = Column(Numeric(12, 2), default=0)
+    subtotal = Column(Numeric(15, 2), default=0)
     tax_rate = Column(Numeric(5, 4), default=0)
-    tax_amount = Column(Numeric(12, 2), default=0)
-    total = Column(Numeric(12, 2), default=0)
-    amount_paid = Column(Numeric(12, 2), default=0)
-    balance_due = Column(Numeric(12, 2), default=0)
+    tax_amount = Column(Numeric(15, 2), default=0)
+    total = Column(Numeric(15, 2), default=0)
+    amount_paid = Column(Numeric(15, 2), default=0)
+    balance_due = Column(Numeric(15, 2), default=0)
 
     notes = Column(Text, nullable=True)
     transaction_id = Column(Integer, ForeignKey("transactions.id"), nullable=True)
@@ -110,7 +110,7 @@ class Invoice(Base):
     # deductible portion prints (IRS Pub. 1771). recurring_invoice_id links
     # a generated invoice to its template for the pledge report.
     is_pledge = Column(Boolean, nullable=False, default=False, server_default=false())
-    fair_value_amount = Column(Numeric(12, 2), nullable=True)
+    fair_value_amount = Column(Numeric(15, 2), nullable=True)
     fair_value_description = Column(String(200), nullable=True)
     recurring_invoice_id = Column(
         Integer, ForeignKey("recurring_invoices.id"), nullable=True, index=True
@@ -141,8 +141,8 @@ class InvoiceLine(Base):
     item_id = Column(Integer, ForeignKey("items.id"), nullable=True)
     description = Column(Text, nullable=True)
     quantity = Column(Numeric(10, 2), default=1)
-    rate = Column(Numeric(12, 2), default=0)
-    amount = Column(Numeric(12, 2), default=0)
+    rate = Column(Numeric(15, 2), default=0)
+    amount = Column(Numeric(15, 2), default=0)
     class_name = Column(String(100), nullable=True)
     # Per-line job / class; NULL falls back to the transaction header
     job_id = Column(Integer, ForeignKey("jobs.id"), nullable=True)

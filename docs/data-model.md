@@ -66,7 +66,7 @@ files under `migrations/versions/`; for model code, see `app/models/`.
 | status | pending · awarded · in_progress · closed · not_awarded |
 | job_type, description, site_address, notes | free text |
 | start_date, projected_end_date, end_date | |
-| contract_amount | Numeric(12,2), drives billed-vs-contract |
+| contract_amount | Numeric(15,2), drives billed-vs-contract |
 | is_active | inactive = hidden from pickers, kept on history |
 
 `job_id` (nullable FK) lives on: transactions, transaction_lines, invoices,

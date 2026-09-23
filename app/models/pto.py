@@ -94,7 +94,7 @@ class PTOAccrual(Base):
     accrued_ytd = Column(Numeric(10, 2), default=0)
     used_ytd = Column(Numeric(10, 2), default=0)
     # Dollar value of `balance` under the policy's valuation
-    dollar_balance = Column(Numeric(12, 2), nullable=False, default=0)
+    dollar_balance = Column(Numeric(15, 2), nullable=False, default=0)
 
     updated_at = Column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

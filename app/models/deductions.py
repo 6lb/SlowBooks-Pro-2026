@@ -47,7 +47,7 @@ class GarnishmentOrder(Base):
     garnishment_type = Column(Enum(GarnishmentType), default=GarnishmentType.CREDITOR)
     calc_method = Column(Enum(GarnishmentMethod), default=GarnishmentMethod.FIXED)
     amount = Column(
-        Numeric(12, 2), default=0
+        Numeric(15, 2), default=0
     )  # dollars (fixed) or percent (percent_disposable)
 
     priority = Column(Integer, default=0)

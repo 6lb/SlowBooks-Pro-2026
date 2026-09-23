@@ -27,7 +27,7 @@ class Payment(Base):
         Integer, ForeignKey("customers.id"), nullable=False, index=True
     )
     date = Column(Date, nullable=False, index=True)
-    amount = Column(Numeric(12, 2), nullable=False)
+    amount = Column(Numeric(15, 2), nullable=False)
     method = Column(String(50), nullable=True)  # check, cash, credit_card, etc.
     check_number = Column(String(50), nullable=True)
     reference = Column(String(100), nullable=True)
@@ -60,7 +60,7 @@ class PaymentAllocation(Base):
     invoice_id = Column(
         Integer, ForeignKey("invoices.id", ondelete="RESTRICT"), nullable=False
     )
-    amount = Column(Numeric(12, 2), nullable=False)
+    amount = Column(Numeric(15, 2), nullable=False)
 
     payment = relationship("Payment", back_populates="allocations")
     invoice = relationship("Invoice", backref="payment_allocations")

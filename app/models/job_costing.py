@@ -92,7 +92,7 @@ class Equipment(Base):
     id = Column(Integer, primary_key=True, index=True)
     code = Column(String(30), nullable=True)
     name = Column(String(200), nullable=False)
-    hourly_rate = Column(Numeric(12, 2), nullable=False, default=0)
+    hourly_rate = Column(Numeric(15, 2), nullable=False, default=0)
     cost_code_id = Column(Integer, ForeignKey("cost_codes.id"), nullable=True)
     # Credit side when hours are charged to a job (applied equipment cost)
     recovery_account_id = Column(Integer, ForeignKey("accounts.id"), nullable=True)
@@ -120,7 +120,7 @@ class JobCost(Base):
     source = Column(String(20), nullable=False, default="manual")
     status = Column(String(10), nullable=False, default="posted")
     transaction_id = Column(Integer, ForeignKey("transactions.id"), nullable=True)
-    total = Column(Numeric(12, 2), nullable=False, default=0)
+    total = Column(Numeric(15, 2), nullable=False, default=0)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(
@@ -151,9 +151,9 @@ class JobCostLine(Base):
     cost_code_id = Column(Integer, ForeignKey("cost_codes.id"), nullable=True)
     cost_type = Column(String(20), nullable=True)
     description = Column(Text, nullable=True)
-    quantity = Column(Numeric(12, 2), nullable=False, default=1)  # hours, miles, units
+    quantity = Column(Numeric(15, 2), nullable=False, default=1)  # hours, miles, units
     rate = Column(Numeric(12, 4), nullable=False, default=0)
-    amount = Column(Numeric(12, 2), nullable=False, default=0)
+    amount = Column(Numeric(15, 2), nullable=False, default=0)
     debit_account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
     credit_account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
     employee_id = Column(Integer, ForeignKey("employees.id"), nullable=True)
@@ -184,8 +184,8 @@ class JobBudget(Base):
     # (whole-job budget). Never both.
     cost_code_id = Column(Integer, ForeignKey("cost_codes.id"), nullable=True)
     cost_type = Column(String(20), nullable=True)
-    amount = Column(Numeric(12, 2), nullable=False, default=0)
-    revenue_amount = Column(Numeric(12, 2), nullable=False, default=0)
+    amount = Column(Numeric(15, 2), nullable=False, default=0)
+    revenue_amount = Column(Numeric(15, 2), nullable=False, default=0)
     source = Column(String(20), nullable=False, default="manual")
     estimate_id = Column(Integer, ForeignKey("estimates.id"), nullable=True)
     notes = Column(Text, nullable=True)
